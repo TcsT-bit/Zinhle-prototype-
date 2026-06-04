@@ -9,214 +9,82 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0a0f1c;
-    --card:#131c31;
-    --card-hover:#1a2740;
-    --card-light:#ffffff;
-    --text:#f1f5f9;
-    --text-dark:#0f172a;
-    --muted:#94a3b8;
-    --accent:#00d4aa;
-    --accent-dark:#00b894;
-    --danger:#ef4444;
-    --warning:#f59e0b;
-    --border:rgba(255,255,255,0.05);
-    --border-light:#e2e8f0;
+    --bg:#0a0f1c; --card:#131c31; --card-hover:#1a2740; --card-light:#ffffff;
+    --text:#f1f5f9; --text-dark:#0f172a; --muted:#94a3b8; --accent:#00d4aa;
+    --accent-dark:#00b894; --danger:#ef4444; --warning:#f59e0b;
+    --border:rgba(255,255,255,0.05); --border-light:#e2e8f0;
   }
   [data-theme="light"]{
-    --bg:#f8fafc;
-    --card:#ffffff;
-    --card-hover:#f1f5f9;
-    --card-dark:#ffffff;
-    --text:#0f172a;
-    --text-light:#0f172a;
-    --muted:#64748b;
-    --border:#e2e8f0;
+    --bg:#f8fafc; --card:#ffffff; --card-hover:#f1f5f9; --text:#0f172a;
+    --text-light:#0f172a; --muted:#64748b; --border:#e2e8f0;
   }
 
   *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;}
-  body{background:var(--bg);color:var(--text);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
+  body{background:var(--bg);color:var(--text);transition:all 0.4s;}
 
   @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
 
 .page{display:none;min-height:100vh;padding-bottom:100px;animation:fadeIn 0.4s ease-out;}
 .page.active{display:block;}
 
-  /* AUTH */
-.auth-container{
-    min-height:100vh;display:flex;align-items:center;justify-content:center;
-    padding:20px;background:linear-gradient(135deg,#1e293b,#0f172a);
-  }
-.auth-card{
-    background:var(--card);padding:32px;border-radius:24px;
-    width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3);
-    border:1px solid var(--border);
-  }
+.auth-container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#1e293b,#0f172a);}
+.auth-card{background:var(--card);padding:32px;border-radius:24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3);border:1px solid var(--border);}
 .auth-card h2{font-size:28px;font-weight:800;margin-bottom:8px;}
 .auth-card p{color:var(--muted);margin-bottom:24px;}
 
-  input,select,button{
-    width:100%;padding:14px;margin:10px 0;
-    border:1px solid var(--border-light);border-radius:12px;
-    background:var(--bg);color:var(--text);font-size:15px;
-    transition:all 0.3s;
-  }
+  input,select,button{width:100%;padding:14px;margin:10px 0;border:1px solid var(--border-light);border-radius:12px;background:var(--bg);color:var(--text);font-size:15px;}
   input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,170,0.2);}
-  button.primary{
-    background:linear-gradient(135deg,var(--accent),var(--accent-dark));
-    color:white;border:none;font-weight:600;cursor:pointer;
-  }
-  button.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,212,170,0.3);}
-  button.danger{background:var(--danger);color:white;border:none;}
+  button.primary{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:white;border:none;font-weight:600;cursor:pointer;}
 
-  /* HOME PAGE */
-.hero{
-    position:relative;height:58vh;
-    background:linear-gradient(135deg,#1e293b,#0f172a), url('attachment://0') center/cover no-repeat;
-    background-blend-mode:overlay;display:flex;flex-direction:column;
-    justify-content:flex-end;padding:24px;
-  }
-.hero::before{
-    content:'';position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(10,15,28,0.95) 75%);
-  }
+.hero{position:relative;height:58vh;background:linear-gradient(135deg,#1e293b,#0f172a) center/cover no-repeat;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(10,15,28,0.95) 75%);}
 .hero-content{position:relative;z-index:2;}
-.hero-content h3{font-size:18px;font-weight:400;opacity:0.9;}
 .hero-content h1{font-size:34px;font-weight:800;margin:4px 0 24px;}
 
-.score-ring{
-    width:260px;height:260px;margin:0 auto;position:relative;
-    display:flex;align-items:center;justify-content:center;
-  }
+.score-ring{width:260px;height:260px;margin:0 auto;position:relative;display:flex;align-items:center;justify-content:center;}
 .score-ring svg{transform:rotate(-90deg);position:absolute;}
-.score-content{
-    text-align:center;background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(20px);width:220px;height:220px;
-    border-radius:50%;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    border:1px solid rgba(255,255,255,0.15);
-  }
-.score-content small{font-size:13px;opacity:0.8;text-transform:uppercase;letter-spacing:1px;}
-.score-content h2{font-size:64px;font-weight:800;margin:4px 0;}
-.score-btn{
-    margin-top:12px;padding:10px 22px;background:var(--accent);
-    color:white;border:none;border-radius:30px;font-weight:600;
-    display:flex;align-items:center;gap:6px;cursor:pointer;transition:0.3s;
-  }
+.score-content{text-align:center;background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);width:220px;height:220px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.15);}
+.score-content h2{font-size:64px;font-weight:800;}
+.score-btn{margin-top:12px;padding:10px 22px;background:var(--accent);color:white;border:none;border-radius:30px;font-weight:600;cursor:pointer;}
 
-.curve{height:40px;background:var(--bg);border-radius:40px 40px 0 0;margin-top:-40px;position:relative;z-index:3;}
-
+.curve{height:40px;background:var(--bg);border-radius:40px 40px 0 0;margin-top:-40px;}
 .container{padding:0 20px;}
 .section-title{font-size:24px;font-weight:700;margin:20px 0 16px;}
 
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
-.card{
-    background:var(--card);border-radius:20px;padding:20px;
-    display:flex;flex-direction:column;gap:8px;cursor:pointer;
-    transition:all 0.3s;border:1px solid var(--border);
-  }
-.card:hover{transform:translateY(-4px);background:var(--card-hover);}
+.card{background:var(--card);border-radius:20px;padding:20px;cursor:pointer;border:1px solid var(--border);}
+.card:hover{background:var(--card-hover);transform:translateY(-4px);}
 .card-icon{width:40px;height:40px;background:rgba(0,212,170,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;}
 .card h4{font-size:16px;font-weight:600;}
 .card p{font-size:13px;color:var(--muted);}
 
-  /* OFFERS PAGE */
-.offers-bg{background:#f1f5f9;min-height:100vh;}
- [data-theme="light"].offers-bg{background:#f1f5f9;}
-.offers-header{background:#e2e8f0;padding:20px 20px 16px;}
-.offers-header h1{font-size:28px;font-weight:800;color:var(--text-dark);}
-.offers-list{padding:16px;display:flex;flex-direction:column;gap:12px;}
-.offer-card{
-    background:white;border-radius:16px;padding:18px;
-    display:flex;gap:16px;align-items:flex-start;
-    box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;transition:all 0.2s;
-  }
-.offer-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.1);}
-.offer-icon{width:48px;height:48px;background:#f8fafc;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
-.offer-content h3{font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
-.offer-content p{font-size:14px;color:var(--muted);line-height:1.4;}
-
-  /* CONTENT PAGES */
 .page-content{background:var(--card-light);min-height:100vh;padding:20px;padding-bottom:100px;color:var(--text-dark);}
- [data-theme="dark"].page-content{background:var(--card);color:var(--text);}
+  [data-theme="dark"].page-content{background:var(--card);color:var(--text);}
 .page-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
 .back-btn{width:40px;height:40px;border-radius:12px;background:#f1f5f9;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;}
- [data-theme="dark"].back-btn{background:#1e293b;color:white;}
 
 .stat{background:#f8fafc;padding:16px;border-radius:16px;margin-bottom:12px;}
- [data-theme="dark"].stat{background:#1e293b;}
+  [data-theme="dark"].stat{background:#1e293b;}
 .stat h4{font-size:13px;color:var(--muted);text-transform:uppercase;}
 .stat p{font-size:24px;font-weight:700;margin-top:4px;}
-
-.file-upload{border:2px dashed var(--border-light);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.3s;}
-.file-upload:hover{border-color:var(--accent);background:rgba(0,212,170,0.1);}
-.file-upload input{display:none;}
 
   table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;}
   th,td{border-bottom:1px solid var(--border-light);padding:14px;text-align:left;}
   th{background:rgba(0,212,170,0.1);color:var(--accent);font-weight:600;}
 
-.timeline{position:relative;padding-left:32px;}
-.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--border-light);}
-.timeline-item{position:relative;padding-bottom:24px;}
-.timeline-item::before{content:'';position:absolute;left:-24px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--card-light);}
- [data-theme="dark"].timeline-item::before{box-shadow:0 0 0 4px var(--card);}
-.timeline-item.completed::before{background:var(--accent-dark);}
-
-.progress-bar{height:8px;background:var(--border-light);border-radius:10px;overflow:hidden;margin-top:8px;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-dark));transition:width 0.8s ease-out;}
-
-.badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;}
-.badge.pending{background:#fbbf24;color:#000;}
-.badge.review{background:#3b82f6;color:white;animation:pulse 2s infinite;}
-.badge.cleared{background:#22c55e;color:white;}
-
-.notification{position:fixed;top:20px;right:20px;background:var(--card);padding:16px 20px;border-radius:12px;border-left:4px solid var(--accent);box-shadow:0 8px 30px rgba(0,0,0,0.3);animation:slideIn 0.4s ease-out;z-index:1000;display:none;}
+.notification{position:fixed;top:20px;right:20px;background:var(--card);padding:16px 20px;border-radius:12px;border-left:4px solid var(--accent);box-shadow:0 8px 30px rgba(0,0,0,0.3);z-index:1000;display:none;}
 .notification.show{display:block;}
 
-  /* BOTTOM NAV */
-.bottom-nav{
-    position:fixed;bottom:0;left:0;right:0;
-    background:var(--card-light);display:flex;justify-content:space-around;
-    padding:12px 0 calc(12px + env(safe-area-inset-bottom));
-    border-radius:24px 24px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,0.1);
-    z-index:100;
-  }
- [data-theme="dark"].bottom-nav{background:var(--card);}
-.nav-item{
-    display:flex;flex-direction:column;align-items:center;gap:4px;
-    font-size:12px;color:var(--muted);cursor:pointer;transition:0.3s;
-  }
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card-light);display:flex;justify-content:space-around;padding:12px 0;border-radius:24px 24px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,0.1);z-index:100;}
+  [data-theme="dark"].bottom-nav{background:var(--card);}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted);cursor:pointer;}
 .nav-item.active{color:var(--accent);}
-.nav-item svg{width:24px;height:24px;}
 
-.help-btn{
-    position:fixed;bottom:90px;right:20px;
-    width:56px;height:56px;border-radius:50%;
-    background:var(--bg);color:white;border:none;
-    display:flex;align-items:center;justify-content:center;
-    font-size:24px;box-shadow:0 4px 20px rgba(0,0,0,0.3);
-    cursor:pointer;z-index:99;
-  }
+.help-btn{position:fixed;bottom:90px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--bg);color:white;border:none;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;z-index:99;}
 
-.top-bar{
-    position:absolute;top:20px;right:20px;z-index:10;
-    display:flex;gap:8px;
-  }
-.toggle-btn{
-    padding:8px 12px;background:rgba(255,255,255,0.15);
-    backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.2);
-    color:white;font-weight:600;cursor:pointer;font-size:14px;
-  }
-
-  @media(max-width:400px){
-  .grid{grid-template-columns:1fr;}
-  .score-ring{width:220px;height:220px;}
-  .score-content{width:180px;height:180px;}
-  .score-content h2{font-size:56px;}
-  }
+.top-bar{position:absolute;top:20px;right:20px;z-index:10;display:flex;gap:8px;}
+.toggle-btn{padding:8px 12px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.2);color:white;font-weight:600;cursor:pointer;}
 </style>
 </head>
 <body data-theme="dark">
@@ -239,9 +107,6 @@
         <input type="checkbox" id="popia" style="width:auto;"> I consent to POPIA data processing
       </label>
       <button class="primary" onclick="login()">Continue</button>
-      <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center;">
-        Demo only. Real use requires NCR registration & POPIA compliance.
-      </p>
     </div>
   </div>
 </div>
@@ -256,7 +121,6 @@
     <div class="hero-content">
       <h3 id="greeting">Good afternoon</h3>
       <h1 id="username">Zinhle Debt Counsellors</h1>
-
       <div class="score-ring">
         <svg width="260" height="260">
           <circle cx="130" cy="130" r="120" stroke="rgba(255,255,255,0.15)" stroke-width="12" fill="none"/>
@@ -266,87 +130,17 @@
         <div class="score-content">
           <small>Debt Health Score</small>
           <h2 id="score">638</h2>
-          <button class="score-btn" onclick="showPage('report')">
-            <span>+</span> View Report
-          </button>
+          <button class="score-btn" onclick="showPage('report')">+ View Report</button>
         </div>
       </div>
     </div>
   </div>
-
   <div class="curve"></div>
-
   <div class="container">
     <h2 class="section-title">Explore</h2>
     <div class="grid">
-      <div class="card" onclick="showPage('report')">
-        <div class="card-icon">📊</div>
-        <h4>Debt Report</h4>
-        <p>See your full breakdown</p>
-      </div>
-      <div class="card" onclick="showPage('calculator')">
-        <div class="card-icon">🧮</div>
-        <h4>Calculator</h4>
-        <p>Check affordability</p>
-      </div>
-      <div class="card" onclick="showPage('debts')">
-        <div class="card-icon">💳</div>
-        <h4>My Debts</h4>
-        <p>Manage accounts</p>
-      </div>
-      <div class="card" onclick="showPage('documents')">
-        <div class="card-icon">📄</div>
-        <h4>Documents</h4>
-        <p>Upload files</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- OFFERS PAGE -->
-<div id="offers" class="page offers-bg">
-  <div class="offers-header">
-    <h1>Offers</h1>
-  </div>
-  <div class="offers-list">
-    <div class="offer-card" onclick="alert('Loan matching coming soon')">
-      <div class="offer-icon">🤝</div>
-      <div class="offer-content">
-        <h3>Loans</h3>
-        <p>Browse short and long-term loans matched to your profile</p>
-      </div>
-    </div>
-
-    <div class="offer-card" onclick="alert('Card offers coming soon')">
-      <div class="offer-icon">💳</div>
-      <div class="offer-content">
-        <h3>Credit/Store Cards</h3>
-        <p>Cards selected for you based on your credit health</p>
-      </div>
-    </div>
-
-    <div class="offer-card" onclick="showPage('debts')">
-      <div class="offer-icon">🔄</div>
-      <div class="offer-content">
-        <h3>Debt Solutions</h3>
-        <p>Streamline your debts and save money with debt review</p>
-      </div>
-    </div>
-
-    <div class="offer-card" onclick="alert('Insurance comparison coming soon')">
-      <div class="offer-icon">🛡️</div>
-      <div class="offer-content">
-        <h3>Insurance</h3>
-        <p>Browse and compare car, life and funeral insurance premiums</p>
-      </div>
-    </div>
-
-    <div class="offer-card" onclick="alert('Phone deals coming soon')">
-      <div class="offer-icon">📱</div>
-      <div class="offer-content">
-        <h3>Phones and Data</h3>
-        <p>Find deals on mobile phones and data bundles</p>
-      </div>
+      <div class="card" onclick="showPage('report')"><div class="card-icon">📊</div><h4>Debt Report</h4><p>See your full breakdown</p></div>
+      <div class="card" onclick="showPage('debts')"><div class="card-icon">💳</div><h4>My Debts</h4><p>Manage accounts</p></div>
     </div>
   </div>
 </div>
@@ -354,121 +148,23 @@
 <!-- REPORT PAGE -->
 <div id="report" class="page">
   <div class="page-content">
-    <div class="page-header">
-      <button class="back-btn" onclick="showPage('home')">←</button>
-      <h2>Debt Report</h2>
-    </div>
+    <div class="page-header"><button class="back-btn" onclick="showPage('home')">←</button><h2>Debt Report</h2></div>
     <div id="reportContent"></div>
-    <div style="display:flex;gap:12px;margin-top:16px;">
-      <button class="primary" onclick="exportPDF()">📄 Export PDF</button>
-      <button class="primary" style="background:var(--accent-dark)" onclick="showNotification('Share link copied!', 'success')">🔗 Share</button>
-    </div>
+    <button class="primary" onclick="exportPDF()">📄 Export PDF</button>
   </div>
 </div>
 
 <!-- DEBTS PAGE -->
 <div id="debts" class="page">
   <div class="page-content">
-    <div class="page-header">
-      <button class="back-btn" onclick="showPage('home')">←</button>
-      <h2>My Debts</h2>
-    </div>
+    <div class="page-header"><button class="back-btn" onclick="showPage('home')">←</button><h2>My Debts</h2></div>
     <input type="text" id="creditor" placeholder="Creditor Name">
     <input type="number" id="amount" placeholder="Outstanding Amount">
     <input type="number" id="installment" placeholder="Monthly Installment">
     <input type="number" id="interest" placeholder="Interest Rate %">
     <button class="primary" onclick="addDebt()">Add Debt</button>
-
     <h3 style="margin-top:24px;">Current Debts</h3>
     <div id="debtList"></div>
-  </div>
-</div>
-
-<!-- DOCUMENTS PAGE -->
-<div id="documents" class="page">
-  <div class="page-content">
-    <div class="page-header">
-      <button class="back-btn" onclick="showPage('home')">←</button>
-      <h2>Documents</h2>
-    </div>
-    <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-      <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.png" onchange="handleFiles(this.files)">
-      <p>📁 Drag & drop or click to upload</p>
-      <p style="font-size:13px;color:var(--muted);margin-top:8px;">ID, Payslips, Bank Statements</p>
-    </div>
-    <div id="fileList" style="margin-top:16px;"></div>
-  </div>
-</div>
-
-<!-- PAYMENTS PAGE -->
-<div id="payments" class="page">
-  <div class="page-content">
-    <div class="page-header">
-      <button class="back-btn" onclick="showPage('home')">←</button>
-      <h2>Payment Tracking</h2>
-    </div>
-    <div id="paymentHistory"></div>
-    <button class="primary" onclick="addPayment()">+ Add Payment Record</button>
-  </div>
-</div>
-
-<!-- CALCULATOR PAGE -->
-<div id="calculator" class="page">
-  <div class="page-content">
-    <div class="page-header">
-      <button class="back-btn" onclick="showPage('home')">←</button>
-      <h2>Affordability Calculator</h2>
-    </div>
-    <input type="number" id="income" placeholder="Monthly Net Income">
-    <input type="number" id="expenses" placeholder="Monthly Living Expenses">
-    <button class="primary" onclick="calcAfford()">Calculate</button>
-    <div id="affordResult"></div>
-
-    <h3 style="margin-top:24px;">Repayment Strategy</h3>
-    <select id="strategy" onchange="updateStrategy()">
-      <option value="snowball">Snowball - Pay smallest debt first</option>
-      <option value="avalanche">Avalanche - Pay highest interest first</option>
-    </select>
-    <div id="strategyResult"></div>
-  </div>
-</div>
-
-<!-- TIMELINE PAGE -->
-<div id="timeline" class="page">
-  <div class="page-content">
-    <div class="page-header">
-      <button class="back-btn" onclick="showPage('home')">←</button>
-      <h2>Debt Review Journey</h2>
-    </div>
-    <div id="timelineView"></div>
-  </div>
-</div>
-
-<!-- ADMIN CLIENTS PAGE -->
-<div id="clients" class="page">
-  <div class="page-content">
-    <div class="page-header">
-      <button class="back-btn" onclick="showPage('home')">←</button>
-      <h2>All Clients</h2>
-    </div>
-    <div id="clientTable"></div>
-  </div>
-</div>
-
-<!-- ADMIN ANALYTICS PAGE -->
-<div id="analytics" class="page">
-  <div class="page-content">
-    <div class="page-header">
-      <button class="back-btn" onclick="showPage('home')">←</button>
-      <h2>Analytics</h2>
-    </div>
-    <div class="grid">
-      <div class="stat"><h4>Total Clients</h4><p id="totalClients">0</p></div>
-      <div class="stat"><h4>In Review</h4><p id="inReview">0</p></div>
-      <div class="stat"><h4>Cleared</h4><p id="cleared">0</p></div>
-      <div class="stat"><h4>Total Debt Managed</h4><p id="totalManaged">R0</p></div>
-    </div>
-    <canvas id="analyticsChart" style="margin-top:20px;max-height:300px;"></canvas>
   </div>
 </div>
 
@@ -477,33 +173,14 @@
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottomNav" style="display:none;">
-  <div class="nav-item active" onclick="showPage('home')">
-    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-    <span>Home</span>
-  </div>
-  <div class="nav-item" onclick="showPage('report')">
-    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-    <span>Report</span>
-  </div>
-  <div class="nav-item" onclick="showPage('offers')">
-    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
-    <span>Offers</span>
-  </div>
-  <div class="nav-item" onclick="showPage('timeline')">
-    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-    <span>Improve</span>
-  </div>
-  <div class="nav-item" onclick="showPage('clients')" id="adminNavBtn" style="display:none;">
-    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-    <span>Admin</span>
-  </div>
+  <div class="nav-item active" onclick="showPage('home')">Home</div>
+  <div class="nav-item" onclick="showPage('report')">Report</div>
+  <div class="nav-item" onclick="showPage('debts')">Debts</div>
 </div>
 
 <script>
 let users = JSON.parse(localStorage.getItem('users') || '{}');
 let currentUser = null;
-let chart = null;
-let analyticsChart = null;
 
 function showNotification(msg,type='info'){
   const notif = document.getElementById('notification');
@@ -519,9 +196,8 @@ function toggleTheme(){
 }
 
 function login(){
-  const email = document.getElementById('email').value;
+  const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
-  const role = document.getElementById('role').value;
   const popia = document.getElementById('popia').checked;
 
   if(!email ||!password){showNotification('Enter email and password','error');return;}
@@ -529,36 +205,27 @@ function login(){
 
   if(!users[email]){
     users[email] = {
-      password, role,
-      debts:[],
-      status:'Pending',
-      income:0,
-      expenses:0,
-      documents:[],
-      payments:[],
-      timeline:['Application Started']
+      password,
+      role: document.getElementById('role').value,
+      debts:[], status:'Pending'
     };
   }
 
-  if(users[email].password!== password){showNotification('Wrong password','error');return;}
+  if(users[email].password!== password){
+    showNotification('Wrong password','error');
+    return;
+  }
 
   currentUser = email;
+  localStorage.setItem('users', JSON.stringify(users));
+
   document.getElementById('auth').classList.remove('active');
   document.getElementById('bottomNav').style.display='flex';
 
-  if(role === 'admin' || users[email].role === 'admin'){
-    document.getElementById('adminNavBtn').style.display='flex';
-    loadClients();
-    loadAnalytics();
-  } else {
-    document.getElementById('adminNavBtn').style.display='none';
-  }
-
-  showPage('home');
+  showPage('home', true);
   updateGreeting();
   updateScore();
   loadDebtList();
-  localStorage.setItem('users', JSON.stringify(users));
   showNotification('Welcome back!','success');
 }
 
@@ -583,29 +250,19 @@ function updateScore(){
   document.getElementById('score').textContent = score;
 
   const offset = 754 - (score-300)/550*754;
-  document.getElementById('scoreCircle').style.transition = 'stroke-dashoffset 1s ease-out';
   document.getElementById('scoreCircle').style.strokeDashoffset = offset;
 }
 
-function showPage(page){
+function showPage(page, skipNavUpdate = false){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(page).classList.add('active');
 
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.querySelectorAll('.nav-item')[getNavIndex(page)]?.classList.add('active');
+  if(!skipNavUpdate){
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  }
 
   if(page==='report')loadReport();
   if(page==='debts')loadDebtList();
-  if(page==='documents')loadDocuments();
-  if(page==='payments')loadPayments();
-  if(page==='timeline')loadTimeline();
-  if(page==='clients')loadClients();
-  if(page==='analytics')loadAnalytics();
-}
-
-function getNavIndex(page){
-  const map = {home:0, report:1, offers:2, timeline:3, clients:4};
-  return map[page] || 0;
 }
 
 function addDebt(){
@@ -629,20 +286,18 @@ function addDebt(){
 }
 
 function loadDebtList(){
-  const debts = users[currentUser].debts;
+  const debts = users[currentUser]?.debts || [];
   const list = document.getElementById('debtList');
-  if(debts.length===0){list.innerHTML='<p style="color:#64748b;text-align:center;padding:20px;">No debts added yet</p>';return;}
+  if(debts.length===0){
+    list.innerHTML='<p style="color:#64748b;text-align:center;padding:20px;">No debts added yet</p>';
+    return;
+  }
 
   list.innerHTML = debts.map((d,i)=>`
     <div class="stat">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div>
-          <h4>${d.creditor}</h4>
-          <p>R${d.amount.toLocaleString()}</p>
-          <p style="font-size:14px;color:#64748b;">R${d.installment}/month • ${d.interest}% interest</p>
-        </div>
-        <button onclick="deleteDebt(${i})" style="width:auto;padding:8px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;">Delete</button>
-      </div>
+      <h4>${d.creditor}</h4>
+      <p>R${d.amount.toLocaleString()} - R${d.installment}/month at ${d.interest}%</p>
+      <button onclick="deleteDebt(${i})" style="margin-top:8px;padding:6px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;">Delete</button>
     </div>
   `).join('');
 }
@@ -656,7 +311,7 @@ function deleteDebt(i){
 }
 
 function loadReport(){
-  const debts = users[currentUser].debts;
+  const debts = users[currentUser]?.debts || [];
   const total = debts.reduce((a,b)=>a+b.amount,0);
   const monthly = debts.reduce((a,b)=>a+b.installment,0);
   const newMonthly = monthly*0.6;
@@ -665,7 +320,6 @@ function loadReport(){
     <div class="stat">
       <h4>Total Debt</h4>
       <p>R${total.toLocaleString()}</p>
-      <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(100,(total/500000)*100)}%"></div></div>
     </div>
     <div class="stat">
       <h4>Current Monthly Payments</h4>
@@ -674,4 +328,32 @@ function loadReport(){
     <div class="stat" style="background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.2);">
       <h4>Estimated Under Debt Review</h4>
       <p style="color:var(--accent-dark);">R${newMonthly.toLocaleString()}</p>
-      <p style="font-size:14px;color:var(--accent-dark);">Potential savings: R${(monthly
+      <p style="font-size:14px;color:var(--accent-dark);">Potential savings: R${(monthly-newMonthly).toLocaleString()}/month</p>
+    </div>
+  `;
+}
+
+function exportPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const debts = users[currentUser]?.debts || [];
+  const total = debts.reduce((a,b)=>a+b.amount,0);
+  const monthly = debts.reduce((a,b)=>a+b.installment,0);
+
+  doc.text('Zinhle Debt Counsellors', 20, 20);
+  doc.text(`Client: ${currentUser}`, 20, 40);
+  doc.text(`Total Debt: R${total.toLocaleString()}`, 20, 50);
+  doc.text(`Monthly Payments: R${monthly.toLocaleString()}`, 20, 60);
+  doc.save('zinhle-debt-report.pdf');
+  showNotification('PDF downloaded','success');
+}
+
+function openWhatsApp(){
+  window.open('https://wa.me/27739308383?text=Hi%20Zinhle%20Debt%20Counsellors', '_blank');
+}
+
+updateGreeting();
+updateScore();
+</script>
+</body>
+</html>
