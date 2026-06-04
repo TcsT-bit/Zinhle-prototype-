@@ -33,9 +33,9 @@
 .auth-card h2{font-size:28px;font-weight:800;margin-bottom:8px;}
 .auth-card p{color:var(--muted);margin-bottom:24px;}
 
-  input,select,button{width:100%;padding:14px;margin:10px 0;border:1px solid var(--border-light);border-radius:12px;background:var(--bg);color:var(--text);font-size:15px;}
-  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,170,0.2);}
-  button.primary{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:white;border:none;font-weight:600;cursor:pointer;}
+input,select,button{width:100%;padding:14px;margin:10px 0;border:1px solid var(--border-light);border-radius:12px;background:var(--bg);color:var(--text);font-size:15px;}
+input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,170,0.2);}
+button.primary{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:white;border:none;font-weight:600;cursor:pointer;}
 
 .hero{position:relative;height:58vh;background:linear-gradient(135deg,#1e293b,#0f172a) center/cover no-repeat;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;}
 .hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(10,15,28,0.95) 75%);}
@@ -60,24 +60,24 @@
 .card p{font-size:13px;color:var(--muted);}
 
 .page-content{background:var(--card-light);min-height:100vh;padding:20px;padding-bottom:100px;color:var(--text-dark);}
-  [data-theme="dark"].page-content{background:var(--card);color:var(--text);}
+[data-theme="dark"].page-content{background:var(--card);color:var(--text);}
 .page-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
 .back-btn{width:40px;height:40px;border-radius:12px;background:#f1f5f9;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;}
 
 .stat{background:#f8fafc;padding:16px;border-radius:16px;margin-bottom:12px;}
-  [data-theme="dark"].stat{background:#1e293b;}
+[data-theme="dark"].stat{background:#1e293b;}
 .stat h4{font-size:13px;color:var(--muted);text-transform:uppercase;}
 .stat p{font-size:24px;font-weight:700;margin-top:4px;}
 
-  table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;}
-  th,td{border-bottom:1px solid var(--border-light);padding:14px;text-align:left;}
-  th{background:rgba(0,212,170,0.1);color:var(--accent);font-weight:600;}
+table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;}
+th,td{border-bottom:1px solid var(--border-light);padding:14px;text-align:left;}
+th{background:rgba(0,212,170,0.1);color:var(--accent);font-weight:600;}
 
 .notification{position:fixed;top:20px;right:20px;background:var(--card);padding:16px 20px;border-radius:12px;border-left:4px solid var(--accent);box-shadow:0 8px 30px rgba(0,0,0,0.3);z-index:1000;display:none;}
 .notification.show{display:block;}
 
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card-light);display:flex;justify-content:space-around;padding:12px 0;border-radius:24px 24px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,0.1);z-index:100;}
-  [data-theme="dark"].bottom-nav{background:var(--card);}
+[data-theme="dark"].bottom-nav{background:var(--card);}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted);cursor:pointer;}
 .nav-item.active{color:var(--accent);}
 
@@ -234,35 +234,52 @@ function logout(){
   document.getElementById('auth').classList.add('active');
   document.getElementById('bottomNav').style.display='none';
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('auth').classList.add('active');
 }
 
 function updateGreeting(){
+  if(!currentUser) return;
   const hour = new Date().getHours();
   const greet = hour < 12? 'Good morning' : hour < 18? 'Good afternoon' : 'Good evening';
-  document.getElementById('greeting').textContent = greet;
-  document.getElementById('username').textContent = currentUser? currentUser.split('@')[0] : 'Zinhle Debt Counsellors';
+  const greetingEl = document.getElementById('greeting');
+  const usernameEl = document.getElementById('username');
+  if(greetingEl) greetingEl.textContent = greet;
+  if(usernameEl) usernameEl.textContent = currentUser.split('@')[0];
 }
 
 function updateScore(){
-  const debts = currentUser? users[currentUser].debts : [];
+  if(!currentUser) return;
+  const debts = users[currentUser]?.debts || [];
   const total = debts.reduce((a,b)=>a+b.amount,0);
   const score = Math.max(300, 850 - Math.floor(total/800));
-  document.getElementById('score').textContent = score;
-
-  const offset = 754 - (score-300)/550*754;
-  document.getElementById('scoreCircle').style.strokeDashoffset = offset;
+  const scoreEl = document.getElementById('score');
+  const circleEl = document.getElementById('scoreCircle');
+  if(scoreEl) scoreEl.textContent = score;
+  if(circleEl){
+    const offset = 754 - (score-300)/550*754;
+    circleEl.style.strokeDashoffset = offset;
+  }
 }
 
 function showPage(page, skipNavUpdate = false){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(page).classList.add('active');
+  const targetPage = document.getElementById(page);
+  if(targetPage) targetPage.classList.add('active');
 
   if(!skipNavUpdate){
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    const idx = getNavIndex(page);
+    const navItems = document.querySelectorAll('.nav-item');
+    if(navItems[idx]) navItems[idx].classList.add('active');
   }
 
   if(page==='report')loadReport();
   if(page==='debts')loadDebtList();
+}
+
+function getNavIndex(page){
+  const map = {home:0, report:1, debts:2};
+  return map[page]?? 0;
 }
 
 function addDebt(){
@@ -288,6 +305,7 @@ function addDebt(){
 function loadDebtList(){
   const debts = users[currentUser]?.debts || [];
   const list = document.getElementById('debtList');
+  if(!list) return;
   if(debts.length===0){
     list.innerHTML='<p style="color:#64748b;text-align:center;padding:20px;">No debts added yet</p>';
     return;
@@ -316,7 +334,10 @@ function loadReport(){
   const monthly = debts.reduce((a,b)=>a+b.installment,0);
   const newMonthly = monthly*0.6;
 
-  document.getElementById('reportContent').innerHTML = `
+  const reportContent = document.getElementById('reportContent');
+  if(!reportContent) return;
+
+  reportContent.innerHTML = `
     <div class="stat">
       <h4>Total Debt</h4>
       <p>R${total.toLocaleString()}</p>
@@ -352,8 +373,7 @@ function openWhatsApp(){
   window.open('https://wa.me/27739308383?text=Hi%20Zinhle%20Debt%20Counsellors', '_blank');
 }
 
-updateGreeting();
-updateScore();
+// Don't call updateGreeting/updateScore on load - wait for login
 </script>
 </body>
 </html>
