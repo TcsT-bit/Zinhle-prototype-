@@ -15,6 +15,7 @@
     --accent:#3b82f6;
     --accent2:#22c55e;
     --danger:#ef4444;
+    --warning:#f59e0b;
     --border:#334155;
   }
   [data-theme="light"]{
@@ -25,25 +26,26 @@
     --accent:#2563eb;
     --accent2:#16a34a;
     --danger:#dc2626;
+    --warning:#d97706;
     --border:#e2e8f0;
   }
   *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
   body{background:var(--bg);color:var(--text);transition:0.3s;}
- .container{max-width:1100px;margin:0 auto;padding:16px;}
+.container{max-width:1100px;margin:0 auto;padding:16px;}
 
   header{background:linear-gradient(135deg,var(--accent),#1d4ed8);padding:20px;border-radius:16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
   header h1{font-size:22px;font-weight:700;}
   header p{font-size:13px;opacity:0.9;}
 
- .toggle{cursor:pointer;background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:8px;border:none;color:white;font-weight:600;}
+.toggle{cursor:pointer;background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:8px;border:none;color:white;font-weight:600;}
 
- .nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;}
- .nav button{padding:12px;border:none;border-radius:12px;background:var(--card);color:var(--text);font-weight:600;cursor:pointer;border:1px solid var(--border);transition:0.2s;}
- .nav button.active,.nav button:hover{background:var(--accent);color:white;border-color:var(--accent);}
- .nav button.danger:hover{background:var(--danger);}
+.nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;}
+.nav button{padding:12px;border:none;border-radius:12px;background:var(--card);color:var(--text);font-weight:600;cursor:pointer;border:1px solid var(--border);transition:0.2s;}
+.nav button.active,.nav button:hover{background:var(--accent);color:white;border-color:var(--accent);}
+.nav button.danger:hover{background:var(--danger);}
 
- .card{background:var(--card);padding:20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.15);margin-bottom:20px;border:1px solid var(--border);}
- .card h3{margin-bottom:12px;font-size:18px;}
+.card{background:var(--card);padding:20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.15);margin-bottom:20px;border:1px solid var(--border);}
+.card h3{margin-bottom:12px;font-size:18px;}
 
   input,select,button{width:100%;padding:12px;margin:8px 0;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:15px;}
   button.primary{background:var(--accent);color:white;border:none;font-weight:600;cursor:pointer;}
@@ -55,22 +57,41 @@
   th,td{border-bottom:1px solid var(--border);padding:12px;text-align:left;}
   th{background:rgba(59,130,246,0.1);color:var(--accent);}
 
- .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;}
- .stat{background:var(--bg);padding:16px;border-radius:12px;border:1px solid var(--border);}
- .stat h4{font-size:13px;color:var(--muted);font-weight:500;}
- .stat p{font-size:24px;font-weight:700;margin-top:4px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;}
+.stat{background:var(--bg);padding:16px;border-radius:12px;border:1px solid var(--border);}
+.stat h4{font-size:13px;color:var(--muted);font-weight:500;}
+.stat p{font-size:24px;font-weight:700;margin-top:4px;}
 
- .badge{padding:6px 10px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;}
- .badge.pending{background:#fbbf24;color:#000;}
- .badge.review{background:#3b82f6;color:white;}
- .badge.cleared{background:#22c55e;color:white;}
+.badge{padding:6px 10px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;}
+.badge.pending{background:#fbbf24;color:#000;}
+.badge.review{background:#3b82f6;color:white;}
+.badge.cleared{background:#22c55e;color:white;}
+.badge.good{background:#22c55e;color:white;}
+.badge.fair{background:#f59e0b;color:white;}
+.badge.poor{background:#ef4444;color:white;}
 
- .hidden{display:none;}
- .flex{display:flex;gap:10px;align-items:center;}
+.hidden{display:none;}
+.flex{display:flex;gap:10px;align-items:center;}
   canvas{max-height:300px;}
 
+  /* ClearScore Features */
+.score-gauge{display:flex;align-items:center;justify-content:center;margin:20px 0;}
+.score-circle{width:180px;height:180px;position:relative;}
+.score-circle svg{transform:rotate(-90deg);}
+.score-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.score-text h2{font-size:48px;font-weight:700;}
+.score-text p{font-size:14px;color:var(--muted);}
+
+.health-factor{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);}
+.health-factor:last-child{border-bottom:none;}
+.factor-bar{width:100px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.factor-fill{height:100%;background:var(--accent2);transition:width 0.6s;}
+
+.tip-card{background:rgba(59,130,246,0.1);border-left:4px solid var(--accent);padding:14px;border-radius:8px;margin-bottom:10px;}
+.tip-card h5{font-size:14px;margin-bottom:4px;color:var(--accent);}
+
   @media(max-width:768px){
-  .nav{grid-template-columns:repeat(2,1fr);}
+.nav{grid-template-columns:repeat(2,1fr);}
     header{flex-direction:column;align-items:flex-start;gap:10px;}
   }
 </style>
@@ -103,6 +124,7 @@
   <div id="client" class="hidden">
     <div class="nav">
       <button onclick="showTab('dashboard')" class="active">Dashboard</button>
+      <button onclick="showTab('creditHealth')">Credit Health</button>
       <button onclick="showTab('addDebt')">Add Debt</button>
       <button onclick="showTab('calculator')">Calculator</button>
       <button onclick="showTab('guide')">Guide</button>
@@ -130,6 +152,38 @@
       </div>
       <canvas id="debtChart"></canvas>
       <button class="primary" onclick="exportPDF()">📄 Export Summary PDF</button>
+    </div>
+
+    <!-- NEW Credit Health Tab -->
+    <div id="creditHealth" class="card hidden">
+      <h3>Credit Health Score</h3>
+
+      <div class="score-gauge">
+        <div class="score-circle">
+          <svg width="180" height="180">
+            <circle cx="90" cy="90" r="80" stroke="var(--border)" stroke-width="16" fill="none"/>
+            <circle id="scoreCircle" cx="90" cy="90" r="80" stroke="var(--accent2)" stroke-width="16" fill="none"
+                    stroke-linecap="round" stroke-dasharray="502" stroke-dashoffset="502"/>
+          </svg>
+          <div class="score-text">
+            <h2 id="creditScore">650</h2>
+            <p id="scoreLabel">Good</p>
+          </div>
+        </div>
+      </div>
+
+      <h4 style="margin:20px 0 12px;">Credit Factors</h4>
+      <div id="healthFactors"></div>
+
+      <h4 style="margin:20px 0 12px;">Tips to Improve Your Score</h4>
+      <div id="scoreTips"></div>
+
+      <h4 style="margin:20px 0 12px;">Affordability Score</h4>
+      <div class="stat">
+        <h4>Based on Income vs Expenses</h4>
+        <p id="affordScore">-</p>
+        <p id="affordLabel" style="font-size:14px;color:var(--muted);margin-top:4px;"></p>
+      </div>
     </div>
 
     <div id="addDebt" class="card hidden">
@@ -231,6 +285,7 @@ function login(){
   } else {
     document.getElementById('client').classList.remove('hidden');
     loadDebts();
+    loadCreditHealth();
   }
   localStorage.setItem('users', JSON.stringify(users));
 }
@@ -245,7 +300,7 @@ function logout(){
 function showTab(tab){
   document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
   event.target.classList.add('active');
-  ['dashboard','addDebt','calculator','guide','clients','leads'].forEach(t=>{
+  ['dashboard','creditHealth','addDebt','calculator','guide','clients','leads'].forEach(t=>{
     document.getElementById(t)?.classList.add('hidden');
   });
   document.getElementById(tab).classList.remove('hidden');
@@ -261,6 +316,7 @@ function addDebt(){
   users[currentUser].debts.push({creditor, amount, installment, interest});
   localStorage.setItem('users', JSON.stringify(users));
   loadDebts();
+  loadCreditHealth();
   document.getElementById('creditor').value='';
   document.getElementById('amount').value='';
   document.getElementById('installment').value='';
@@ -298,6 +354,7 @@ function deleteDebt(i){
   users[currentUser].debts.splice(i,1);
   localStorage.setItem('users', JSON.stringify(users));
   loadDebts();
+  loadCreditHealth();
 }
 
 function drawChart(debts){
@@ -327,6 +384,7 @@ function calcAfford(){
       <p>R${disposable.toLocaleString()}</p>
       <p style="font-size:13px;color:var(--muted);">This is what can go toward debt payments</p>
     </div>`;
+  loadCreditHealth();
 }
 
 function updateStrategy(){
@@ -367,7 +425,6 @@ function updateStatus(email,status){
   loadClients();
 }
 
-// 1. WhatsApp Lead Capture
 function sendLead(){
   const name = document.getElementById('leadName').value;
   const phone = document.getElementById('leadPhone').value;
@@ -380,14 +437,12 @@ function sendLead(){
   const url = `https://wa.me/27739308383?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
 
-  // Clear form
   document.getElementById('leadName').value='';
   document.getElementById('leadPhone').value='';
   document.getElementById('leadIncome').value='';
   document.getElementById('leadDebt').value='';
 }
 
-// 2. PDF Export with jsPDF
 async function exportPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -418,6 +473,91 @@ async function exportPDF(){
   });
 
   doc.save('debt-summary.pdf');
+}
+
+// CLEAR SCORE FEATURES
+function calculateCreditScore(){
+  const debts = users[currentUser].debts || [];
+  const totalDebt = debts.reduce((a,b)=>a+b.amount,0);
+  const totalInstallment = debts.reduce((a,b)=>a+b.installment,0);
+
+  let score = 700;
+  score -= Math.min(200, Math.floor(totalDebt/2000));
+  score -= Math.min(100, debts.length*15);
+
+  if(users[currentUser].status==='Cleared') score += 50;
+  if(users[currentUser].status==='In Review') score -= 20;
+
+  return Math.max(300, Math.min(850, score));
+}
+
+function loadCreditHealth(){
+  const score = calculateCreditScore();
+  const debts = users[currentUser].debts || [];
+  const income = users[currentUser].income || 0;
+  const expenses = users[currentUser].expenses || 0;
+  const totalDebt = debts.reduce((a,b)=>a+b.amount,0);
+  const totalInstallment = debts.reduce((a,b)=>a+b.installment,0);
+
+  // Update gauge
+  document.getElementById('creditScore').textContent = score;
+  const offset = 502 - ((score-300)/550)*502;
+  document.getElementById('scoreCircle').style.strokeDashoffset = offset;
+
+  let label = 'Poor';
+  let color = 'var(--danger)';
+  if(score >= 750){label='Excellent'; color='var(--accent2)';}
+  else if(score >= 700){label='Good'; color='var(--accent2)';}
+  else if(score >= 650){label='Fair'; color='var(--warning)';}
+  document.getElementById('scoreLabel').textContent = label;
+  document.getElementById('scoreCircle').style.stroke = color;
+
+  // Credit Factors
+  const factors = [
+    {name:'Payment History', score: score>650?85:60, desc:'Pay on time to improve'},
+    {name:'Credit Usage', score: totalDebt>0?Math.max(0,100-Math.floor(totalDebt/10000)):90, desc:'Keep balances low'},
+    {name:'Debt Age', score: debts.length>0?70:50, desc:'Older accounts help'},
+    {name:'Credit Mix', score: debts.length>2?80:50, desc:'Mix of accounts helps'}
+  ];
+
+  document.getElementById('healthFactors').innerHTML = factors.map(f=>`
+    <div class="health-factor">
+      <div>
+        <strong>${f.name}</strong>
+        <div style="font-size:13px;color:var(--muted);">${f.desc}</div>
+      </div>
+      <div class="flex">
+        <div class="factor-bar"><div class="factor-fill" style="width:${f.score}%"></div></div>
+        <span>${f.score}%</span>
+      </div>
+    </div>
+  `).join('');
+
+  // Tips
+  const tips = [];
+  if(totalDebt > 50000) tips.push({title:'Reduce High Balances', desc:'Focus on paying down accounts over R10,000 first'});
+  if(debts.length > 4) tips.push({title:'Too Many Accounts', desc:'Consolidate smaller debts to simplify payments'});
+  if(totalInstallment > income*0.4) tips.push({title:'High Debt Ratio', desc:'Your payments are over 40% of income. Debt review can help'});
+  if(score < 650) tips.push({title:'Check for Errors', desc:'Review your credit report for incorrect listings'});
+
+  document.getElementById('scoreTips').innerHTML = tips.map(t=>`
+    <div class="tip-card">
+      <h5>${t.title}</h5>
+      <p>${t.desc}</p>
+    </div>
+  `).join('');
+
+  // Affordability Score
+  if(income > 0){
+    const disposable = income - expenses;
+    const affordScore = Math.min(100, Math.max(0, Math.floor((disposable/income)*100)));
+    let affordLabel = 'Poor';
+    if(affordScore >= 60) affordLabel = 'Good';
+    else if(affordScore >= 40) affordLabel = 'Fair';
+
+    document.getElementById('affordScore').textContent = affordScore + '%';
+    document.getElementById('affordLabel').textContent = affordLabel + ' - ' + (affordScore>=60?'You can afford debt repayments':'Income too low for current debts');
+  }
 }
 </script>
 </body>
