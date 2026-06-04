@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zinhle Debt Counsellors - Client Portal</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root{
     --bg:#0f172a;
@@ -36,7 +37,7 @@
 
  .toggle{cursor:pointer;background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:8px;border:none;color:white;font-weight:600;}
 
- .nav{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+ .nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;}
  .nav button{padding:12px;border:none;border-radius:12px;background:var(--card);color:var(--text);font-weight:600;cursor:pointer;border:1px solid var(--border);transition:0.2s;}
  .nav button.active,.nav button:hover{background:var(--accent);color:white;border-color:var(--accent);}
  .nav button.danger:hover{background:var(--danger);}
@@ -69,7 +70,7 @@
   canvas{max-height:300px;}
 
   @media(max-width:768px){
-   .nav{grid-template-columns:repeat(2,1fr);}
+  .nav{grid-template-columns:repeat(2,1fr);}
     header{flex-direction:column;align-items:flex-start;gap:10px;}
   }
 </style>
@@ -180,13 +181,25 @@
   <div id="admin" class="hidden">
     <div class="nav">
       <button onclick="showTab('clients')" class="active">Clients</button>
+      <button onclick="showTab('leads')">Leads</button>
       <button onclick="logout()" class="danger">Logout</button>
     </div>
+
     <div id="clients" class="card">
       <h3>All Client Cases</h3>
       <table id="clientTable">
         <tr><th>Email</th><th>Total Debt</th><th>Status</th><th>Action</th></tr>
       </table>
+    </div>
+
+    <div id="leads" class="card hidden">
+      <h3>New Lead Capture</h3>
+      <p style="color:var(--muted);margin-bottom:12px;">Capture leads and send them directly to WhatsApp</p>
+      <input type="text" id="leadName" placeholder="Full Name">
+      <input type="tel" id="leadPhone" placeholder="Phone Number">
+      <input type="number" id="leadIncome" placeholder="Monthly Income">
+      <input type="number" id="leadDebt" placeholder="Total Debt">
+      <button class="primary" onclick="sendLead()">📱 Send to WhatsApp</button>
     </div>
   </div>
 </div>
@@ -232,7 +245,7 @@ function logout(){
 function showTab(tab){
   document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
   event.target.classList.add('active');
-  ['dashboard','addDebt','calculator','guide','clients'].forEach(t=>{
+  ['dashboard','addDebt','calculator','guide','clients','leads'].forEach(t=>{
     document.getElementById(t)?.classList.add('hidden');
   });
   document.getElementById(tab).classList.remove('hidden');
@@ -354,8 +367,57 @@ function updateStatus(email,status){
   loadClients();
 }
 
-function exportPDF(){
-  alert('PDF export requires a backend. For now, screenshot this page or copy the summary.');
+// 1. WhatsApp Lead Capture
+function sendLead(){
+  const name = document.getElementById('leadName').value;
+  const phone = document.getElementById('leadPhone').value;
+  const income = document.getElementById('leadIncome').value;
+  const debt = document.getElementById('leadDebt').value;
+
+  if(!name ||!phone){alert('Enter name and phone number');return;}
+
+  const message = `Hi, I'm ${name}. My income is R${income} and debt is R${debt}. Can you help me with debt review?`;
+  const url = `https://wa.me/27739308383?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+
+  // Clear form
+  document.getElementById('leadName').value='';
+  document.getElementById('leadPhone').value='';
+  document.getElementById('leadIncome').value='';
+  document.getElementById('leadDebt').value='';
+}
+
+// 2. PDF Export with jsPDF
+async function exportPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const debts = users[currentUser].debts;
+  const total = debts.reduce((a,b)=>a+b.amount,0);
+  const currentPay = debts.reduce((a,b)=>a+b.installment,0);
+  const newPay = currentPay*0.6;
+
+  doc.setFontSize(18);
+  doc.text('Zinhle Debt Counsellors - Debt Summary', 20, 20);
+  doc.setFontSize(12);
+  doc.text(`Client: ${currentUser}`, 20, 40);
+  doc.text(`Total Debt: R${total.toLocaleString()}`, 20, 50);
+  doc.text(`Current Monthly Payments: R${currentPay.toLocaleString()}`, 20, 60);
+  doc.text(`Est. Under Review: R${newPay.toLocaleString()}`, 20, 70);
+  doc.text(`Monthly Savings: R${(currentPay-newPay).toLocaleString()}`, 20, 80);
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 90);
+
+  doc.setFontSize(14);
+  doc.text('Debt Breakdown:', 20, 110);
+
+  let y = 125;
+  doc.setFontSize(11);
+  debts.forEach(d=>{
+    doc.text(`${d.creditor} - R${d.amount.toLocaleString()} - ${d.interest}% interest`, 20, y);
+    y += 10;
+    if(y > 270){doc.addPage(); y=20;}
+  });
+
+  doc.save('debt-summary.pdf');
 }
 </script>
 </body>
