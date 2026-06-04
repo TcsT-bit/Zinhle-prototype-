@@ -4,97 +4,186 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zinhle Debt Counsellors - Client Portal</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
-  body{background:#f5f7fa;color:#333;}
- .container{max-width:1000px;margin:0 auto;padding:20px;}
-  header{background:#1e3a8a;color:white;padding:20px;border-radius:8px;margin-bottom:20px;}
-  header h1{font-size:24px;}
- .card{background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:20px;}
-  input,select,button{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:5px;}
-  button{background:#1e3a8a;color:white;border:none;cursor:pointer;font-weight:bold;}
-  button:hover{background:#152c6b;}
- .hidden{display:none;}
-  table{width:100%;border-collapse:collapse;margin-top:10px;}
-  th,td{border:1px solid #ddd;padding:10px;text-align:left;}
-  th{background:#1e3a8a;color:white;}
- .badge{padding:5px 10px;border-radius:12px;font-size:12px;}
+  :root{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+    --accent:#3b82f6;
+    --accent2:#22c55e;
+    --danger:#ef4444;
+    --border:#334155;
+  }
+  [data-theme="light"]{
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --text:#0f172a;
+    --muted:#64748b;
+    --accent:#2563eb;
+    --accent2:#16a34a;
+    --danger:#dc2626;
+    --border:#e2e8f0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+  body{background:var(--bg);color:var(--text);transition:0.3s;}
+ .container{max-width:1100px;margin:0 auto;padding:16px;}
+
+  header{background:linear-gradient(135deg,var(--accent),#1d4ed8);padding:20px;border-radius:16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
+  header h1{font-size:22px;font-weight:700;}
+  header p{font-size:13px;opacity:0.9;}
+
+ .toggle{cursor:pointer;background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:8px;border:none;color:white;font-weight:600;}
+
+ .nav{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+ .nav button{padding:12px;border:none;border-radius:12px;background:var(--card);color:var(--text);font-weight:600;cursor:pointer;border:1px solid var(--border);transition:0.2s;}
+ .nav button.active,.nav button:hover{background:var(--accent);color:white;border-color:var(--accent);}
+ .nav button.danger:hover{background:var(--danger);}
+
+ .card{background:var(--card);padding:20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.15);margin-bottom:20px;border:1px solid var(--border);}
+ .card h3{margin-bottom:12px;font-size:18px;}
+
+  input,select,button{width:100%;padding:12px;margin:8px 0;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:15px;}
+  button.primary{background:var(--accent);color:white;border:none;font-weight:600;cursor:pointer;}
+  button.primary:hover{opacity:0.9;}
+  button.success{background:var(--accent2);color:white;border:none;}
+  button.danger{background:var(--danger);color:white;border:none;}
+
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px;}
+  th,td{border-bottom:1px solid var(--border);padding:12px;text-align:left;}
+  th{background:rgba(59,130,246,0.1);color:var(--accent);}
+
+ .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;}
+ .stat{background:var(--bg);padding:16px;border-radius:12px;border:1px solid var(--border);}
+ .stat h4{font-size:13px;color:var(--muted);font-weight:500;}
+ .stat p{font-size:24px;font-weight:700;margin-top:4px;}
+
+ .badge{padding:6px 10px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;}
  .badge.pending{background:#fbbf24;color:#000;}
  .badge.review{background:#3b82f6;color:white;}
- .badge.cleared{background:#10b981;color:white;}
- .nav{display:flex;gap:10px;margin-bottom:20px;}
- .nav button{flex:1;}
- .danger{background:#dc2626;}
+ .badge.cleared{background:#22c55e;color:white;}
+
+ .hidden{display:none;}
+ .flex{display:flex;gap:10px;align-items:center;}
+  canvas{max-height:300px;}
+
+  @media(max-width:768px){
+   .nav{grid-template-columns:repeat(2,1fr);}
+    header{flex-direction:column;align-items:flex-start;gap:10px;}
+  }
 </style>
 </head>
-<body>
+<body data-theme="dark">
 <div class="container">
   <header>
-    <h1>Zinhle Debt Counsellors - Client Portal</h1>
-    <p>Debt Review & Financial Guidance</p>
+    <div>
+      <h1>Zinhle Debt Counsellors</h1>
+      <p>Debt Review & Financial Guidance Portal</p>
+    </div>
+    <button class="toggle" onclick="toggleTheme()">🌙/☀️ Theme</button>
   </header>
 
-  <!-- LOGIN / REGISTER -->
+  <!-- AUTH -->
   <div id="auth" class="card">
-    <h2>Login / Register</h2>
+    <h3>Welcome Back</h3>
+    <p style="color:var(--muted);margin-bottom:12px;">Login or create an account to manage your debt review</p>
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="password" placeholder="Password">
     <select id="role">
       <option value="client">Client</option>
       <option value="admin">Admin</option>
     </select>
-    <button onclick="login()">Login / Register</button>
+    <button class="primary" onclick="login()">Continue</button>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">Demo only. Real use requires NCR registration & POPIA compliance.</p>
   </div>
 
-  <!-- CLIENT DASHBOARD -->
+  <!-- CLIENT -->
   <div id="client" class="hidden">
     <div class="nav">
+      <button onclick="showTab('dashboard')" class="active">Dashboard</button>
       <button onclick="showTab('addDebt')">Add Debt</button>
-      <button onclick="showTab('myDebts')">My Debts</button>
-      <button onclick="showTab('guide')">Debt Review Guide</button>
-      <button class="danger" onclick="logout()">Logout</button>
+      <button onclick="showTab('calculator')">Calculator</button>
+      <button onclick="showTab('guide')">Guide</button>
     </div>
 
-    <div id="addDebt" class="card">
+    <div id="dashboard" class="card">
+      <h3>Your Financial Overview</h3>
+      <div class="grid">
+        <div class="stat">
+          <h4>Total Debt</h4>
+          <p id="totalDebt">R0</p>
+        </div>
+        <div class="stat">
+          <h4>Current Monthly Payments</h4>
+          <p id="currentPay">R0</p>
+        </div>
+        <div class="stat">
+          <h4>Est. Under Review</h4>
+          <p id="newPay">R0</p>
+        </div>
+        <div class="stat">
+          <h4>Monthly Savings</h4>
+          <p id="savings" style="color:var(--accent2)">R0</p>
+        </div>
+      </div>
+      <canvas id="debtChart"></canvas>
+      <button class="primary" onclick="exportPDF()">📄 Export Summary PDF</button>
+    </div>
+
+    <div id="addDebt" class="card hidden">
       <h3>Add Your Debt</h3>
-      <input type="text" id="creditor" placeholder="Creditor Name e.g. Capitec">
+      <input type="text" id="creditor" placeholder="Creditor Name e.g. Capitec, ABSA">
       <input type="number" id="amount" placeholder="Outstanding Amount">
       <input type="number" id="installment" placeholder="Current Monthly Installment">
-      <button onclick="addDebt()">Save Debt</button>
-    </div>
+      <input type="number" id="interest" placeholder="Interest Rate %">
+      <button class="primary" onclick="addDebt()">Save Debt</button>
 
-    <div id="myDebts" class="card hidden">
-      <h3>My Debts</h3>
-      <p><strong>Total Debt:</strong> R<span id="totalDebt">0</span></p>
-      <p><strong>Estimated New Installment:</strong> R<span id="newInstallment">0</span>/month</p>
+      <h3 style="margin-top:20px;">Your Debts</h3>
       <table id="debtTable">
-        <tr><th>Creditor</th><th>Amount</th><th>Installment</th></tr>
+        <tr><th>Creditor</th><th>Amount</th><th>Installment</th><th>Interest</th><th></th></tr>
       </table>
     </div>
 
+    <div id="calculator" class="card hidden">
+      <h3>Affordability Calculator</h3>
+      <input type="number" id="income" placeholder="Monthly Net Income">
+      <input type="number" id="expenses" placeholder="Monthly Living Expenses">
+      <button class="primary" onclick="calcAfford()">Calculate</button>
+      <div id="affordResult" style="margin-top:12px;"></div>
+
+      <h3 style="margin-top:20px;">Repayment Strategy</h3>
+      <select id="strategy" onchange="updateStrategy()">
+        <option value="snowball">Snowball - Pay smallest debt first</option>
+        <option value="avalanche">Avalanche - Pay highest interest first</option>
+      </select>
+      <div id="strategyResult"></div>
+    </div>
+
     <div id="guide" class="card hidden">
-      <h3>Debt Review Process</h3>
-      <ol>
-        <li><strong>Assessment:</strong> We check if you are over-indebted under the NCA.</li>
-        <li><strong>Application:</strong> We send Form 17.1 to all credit providers.</li>
-        <li><strong>Proposal:</strong> We negotiate lower payments with creditors.</li>
-        <li><strong>Court Order:</strong> If accepted, you get a court order protecting you.</li>
-        <li><strong>Payment:</strong> You pay one reduced amount monthly to a PDA.</li>
-        <li><strong>Clearance:</strong> Once paid, you get a clearance certificate.</li>
+      <h3>Debt Review Process - NCA</h3>
+      <ol style="padding-left:20px;line-height:1.8;">
+        <li><strong>Free Assessment:</strong> We check if you qualify as over-indebted.</li>
+        <li><strong>Form 17.1:</strong> We notify all credit providers you are under review.</li>
+        <li><strong>Proposal:</strong> We negotiate reduced payments and interest.</li>
+        <li><strong>Court Order:</strong> Legal protection from legal action and repossession.</li>
+        <li><strong>Single Payment:</strong> You pay one reduced amount to a Payment Distribution Agency.</li>
+        <li><strong>Clearance:</strong> Once paid, you receive a clearance certificate.</li>
       </ol>
-      <p><strong>Note:</strong> You cannot take new credit while under debt review.</p>
+      <div style="background:rgba(239,68,68,0.1);padding:12px;border-radius:8px;margin-top:12px;">
+        <strong>Important:</strong> You cannot take new credit while under debt review.
+      </div>
     </div>
   </div>
 
-  <!-- ADMIN DASHBOARD -->
+  <!-- ADMIN -->
   <div id="admin" class="hidden">
     <div class="nav">
-      <button onclick="showTab('clients')">All Clients</button>
-      <button class="danger" onclick="logout()">Logout</button>
+      <button onclick="showTab('clients')" class="active">Clients</button>
+      <button onclick="logout()" class="danger">Logout</button>
     </div>
-
     <div id="clients" class="card">
-      <h3>Client Cases</h3>
+      <h3>All Client Cases</h3>
       <table id="clientTable">
         <tr><th>Email</th><th>Total Debt</th><th>Status</th><th>Action</th></tr>
       </table>
@@ -105,6 +194,12 @@
 <script>
 let users = JSON.parse(localStorage.getItem('users') || '{}');
 let currentUser = null;
+let chart = null;
+
+function toggleTheme(){
+  const theme = document.body.dataset.theme === 'dark'? 'light' : 'dark';
+  document.body.dataset.theme = theme;
+}
 
 function login(){
   const email = document.getElementById('email').value;
@@ -112,15 +207,11 @@ function login(){
   const role = document.getElementById('role').value;
 
   if(!email ||!password){alert('Enter email and password');return;}
-
-  if(!users[email]){
-    users[email] = {password, role, debts:[], status:'Pending'};
-  }
+  if(!users[email]){users[email] = {password, role, debts:[], status:'Pending', income:0, expenses:0};}
   if(users[email].password!== password){alert('Wrong password');return;}
 
   currentUser = email;
   document.getElementById('auth').classList.add('hidden');
-
   if(role === 'admin' || users[email].role === 'admin'){
     document.getElementById('admin').classList.remove('hidden');
     loadClients();
@@ -139,74 +230,133 @@ function logout(){
 }
 
 function showTab(tab){
-  ['addDebt','myDebts','guide','clients'].forEach(t=>{
-    document.getElementById(t).classList.add('hidden');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  ['dashboard','addDebt','calculator','guide','clients'].forEach(t=>{
+    document.getElementById(t)?.classList.add('hidden');
   });
   document.getElementById(tab).classList.remove('hidden');
 }
 
 function addDebt(){
   const creditor = document.getElementById('creditor').value;
-  const amount = parseFloat(document.getElementById('amount').value);
-  const installment = parseFloat(document.getElementById('installment').value);
+  const amount = parseFloat(document.getElementById('amount').value)||0;
+  const installment = parseFloat(document.getElementById('installment').value)||0;
+  const interest = parseFloat(document.getElementById('interest').value)||0;
 
-  if(!creditor ||!amount){alert('Fill all fields');return;}
-
-  users[currentUser].debts.push({creditor, amount, installment});
+  if(!creditor ||!amount){alert('Enter creditor and amount');return;}
+  users[currentUser].debts.push({creditor, amount, installment, interest});
   localStorage.setItem('users', JSON.stringify(users));
   loadDebts();
-  alert('Debt added');
+  document.getElementById('creditor').value='';
+  document.getElementById('amount').value='';
+  document.getElementById('installment').value='';
+  document.getElementById('interest').value='';
 }
 
 function loadDebts(){
   const debts = users[currentUser].debts;
-  let total = 0;
-  let currentInstall = 0;
+  let total=0,currentPay=0;
   const table = document.getElementById('debtTable');
-  table.innerHTML = '<tr><th>Creditor</th><th>Amount</th><th>Installment</th></tr>';
+  table.innerHTML = '<tr><th>Creditor</th><th>Amount</th><th>Installment</th><th>Interest</th><th></th></tr>';
 
-  debts.forEach(d=>{
+  debts.forEach((d,i)=>{
     total += d.amount;
-    currentInstall += d.installment || 0;
-    table.innerHTML += `<tr><td>${d.creditor}</td><td>R${d.amount}</td><td>R${d.installment}</td></tr>`;
+    currentPay += d.installment;
+    table.innerHTML += `<tr>
+      <td>${d.creditor}</td>
+      <td>R${d.amount.toLocaleString()}</td>
+      <td>R${d.installment.toLocaleString()}</td>
+      <td>${d.interest}%</td>
+      <td><button class="danger" onclick="deleteDebt(${i})">Delete</button></td>
+    </tr>`;
   });
 
-  document.getElementById('totalDebt').innerText = total.toFixed(2);
-  // Simple estimate: reduce installment by 40% under review
-  document.getElementById('newInstallment').innerText = (currentInstall*0.6).toFixed(2);
+  const newPay = currentPay*0.6;
+  document.getElementById('totalDebt').innerText='R'+total.toLocaleString();
+  document.getElementById('currentPay').innerText='R'+currentPay.toLocaleString();
+  document.getElementById('newPay').innerText='R'+newPay.toLocaleString();
+  document.getElementById('savings').innerText='R'+(currentPay-newPay).toLocaleString();
+
+  drawChart(debts);
+}
+
+function deleteDebt(i){
+  users[currentUser].debts.splice(i,1);
+  localStorage.setItem('users', JSON.stringify(users));
+  loadDebts();
+}
+
+function drawChart(debts){
+  const ctx = document.getElementById('debtChart');
+  if(chart)chart.destroy();
+  chart = new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels:debts.map(d=>d.creditor),
+      datasets:[{data:debts.map(d=>d.amount),backgroundColor:['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6']}]
+    },
+    options:{plugins:{legend:{labels:{color:getComputedStyle(document.body).getPropertyValue('--text')}}}}
+  });
+}
+
+function calcAfford(){
+  const income=parseFloat(document.getElementById('income').value)||0;
+  const expenses=parseFloat(document.getElementById('expenses').value)||0;
+  const disposable=income-expenses;
+  users[currentUser].income=income;
+  users[currentUser].expenses=expenses;
+  localStorage.setItem('users', JSON.stringify(users));
+
+  document.getElementById('affordResult').innerHTML=`
+    <div class="stat">
+      <h4>Disposable Income</h4>
+      <p>R${disposable.toLocaleString()}</p>
+      <p style="font-size:13px;color:var(--muted);">This is what can go toward debt payments</p>
+    </div>`;
+}
+
+function updateStrategy(){
+  const debts=[...users[currentUser].debts];
+  const strategy=document.getElementById('strategy').value;
+  if(strategy==='snowball')debts.sort((a,b)=>a.amount-b.amount);
+  else debts.sort((a,b)=>b.interest-a.interest);
+
+  let html='<table><tr><th>Order</th><th>Creditor</th><th>Amount</th><th>Interest</th></tr>';
+  debts.forEach((d,i)=>{html+=`<tr><td>${i+1}</td><td>${d.creditor}</td><td>R${d.amount}</td><td>${d.interest}%</td></tr>`;});
+  html+='</table>';
+  document.getElementById('strategyResult').innerHTML=html;
 }
 
 function loadClients(){
   const table = document.getElementById('clientTable');
   table.innerHTML = '<tr><th>Email</th><th>Total Debt</th><th>Status</th><th>Action</th></tr>';
-
   Object.keys(users).forEach(email=>{
-    if(users[email].role!== 'admin'){
-      const total = users[email].debts.reduce((a,b)=>a+b.amount,0);
-      const status = users[email].status;
-      const badge = status==='Pending'? 'pending' : status==='In Review'? 'review' : 'cleared';
-      table.innerHTML += `
-        <tr>
-          <td>${email}</td>
-          <td>R${total}</td>
-          <td><span class="badge ${badge}">${status}</span></td>
-          <td>
-            <select onchange="updateStatus('${email}',this.value)">
-              <option>Pending</option>
-              <option>In Review</option>
-              <option>Cleared</option>
-            </select>
-          </td>
-        </tr>`;
+    if(users[email].role!=='admin'){
+      const total=users[email].debts.reduce((a,b)=>a+b.amount,0);
+      const status=users[email].status;
+      const badge=status==='Pending'?'pending':status==='In Review'?'review':'cleared';
+      table.innerHTML+=`<tr>
+        <td>${email}</td>
+        <td>R${total.toLocaleString()}</td>
+        <td><span class="badge ${badge}">${status}</span></td>
+        <td><select onchange="updateStatus('${email}',this.value)">
+          <option>Pending</option><option>In Review</option><option>Cleared</option>
+        </select></td>
+      </tr>`;
     }
   });
 }
 
 function updateStatus(email,status){
-  users[email].status = status;
-  localStorage.setItem('users', JSON.stringify(users));
+  users[email].status=status;
+  localStorage.setItem('users',JSON.stringify(users));
   loadClients();
+}
+
+function exportPDF(){
+  alert('PDF export requires a backend. For now, screenshot this page or copy the summary.');
 }
 </script>
 </body>
-      </html>
+</html>
