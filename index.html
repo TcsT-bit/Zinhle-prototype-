@@ -4,140 +4,195 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Zinhle Debt Counsellors</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0a0f1c;
-    --card:#ffffff;
-    --card-dark:#131c31;
-    --text:#0f172a;
-    --text-light:#f1f5f9;
-    --muted:#64748b;
+    --card:#131c31;
+    --card-hover:#1a2740;
+    --card-light:#ffffff;
+    --text:#f1f5f9;
+    --text-dark:#0f172a;
+    --muted:#94a3b8;
     --accent:#00d4aa;
     --accent-dark:#00b894;
     --danger:#ef4444;
     --warning:#f59e0b;
+    --border:rgba(255,255,255,0.05);
+    --border-light:#e2e8f0;
   }
+  [data-theme="light"]{
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --card-hover:#f1f5f9;
+    --card-dark:#ffffff;
+    --text:#0f172a;
+    --text-light:#0f172a;
+    --muted:#64748b;
+    --border:#e2e8f0;
+  }
+
   *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;}
-  body{background:var(--bg);color:var(--text-light);overflow-x:hidden;}
+  body{background:var(--bg);color:var(--text);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
 
   @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
   @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
 
- .page{display:none;min-height:100vh;padding-bottom:100px;animation:fadeIn 0.4s ease-out;}
- .page.active{display:block;}
+.page{display:none;min-height:100vh;padding-bottom:100px;animation:fadeIn 0.4s ease-out;}
+.page.active{display:block;}
+
+  /* AUTH */
+.auth-container{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:20px;background:linear-gradient(135deg,#1e293b,#0f172a);
+  }
+.auth-card{
+    background:var(--card);padding:32px;border-radius:24px;
+    width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3);
+    border:1px solid var(--border);
+  }
+.auth-card h2{font-size:28px;font-weight:800;margin-bottom:8px;}
+.auth-card p{color:var(--muted);margin-bottom:24px;}
+
+  input,select,button{
+    width:100%;padding:14px;margin:10px 0;
+    border:1px solid var(--border-light);border-radius:12px;
+    background:var(--bg);color:var(--text);font-size:15px;
+    transition:all 0.3s;
+  }
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,170,0.2);}
+  button.primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+    color:white;border:none;font-weight:600;cursor:pointer;
+  }
+  button.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,212,170,0.3);}
+  button.danger{background:var(--danger);color:white;border:none;}
 
   /* HOME PAGE */
- .hero{
-    position:relative;
-    height:58vh;
+.hero{
+    position:relative;height:58vh;
     background:linear-gradient(135deg,#1e293b,#0f172a), url('attachment://0') center/cover no-repeat;
-    background-blend-mode:overlay;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
-    padding:24px;
+    background-blend-mode:overlay;display:flex;flex-direction:column;
+    justify-content:flex-end;padding:24px;
   }
- .hero::before{
-    content:'';
-    position:absolute;
-    inset:0;
+.hero::before{
+    content:'';position:absolute;inset:0;
     background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(10,15,28,0.95) 75%);
   }
- .hero-content{position:relative;z-index:2;}
- .hero-content h3{font-size:18px;font-weight:400;opacity:0.9;}
- .hero-content h1{font-size:34px;font-weight:800;margin:4px 0 24px;}
+.hero-content{position:relative;z-index:2;}
+.hero-content h3{font-size:18px;font-weight:400;opacity:0.9;}
+.hero-content h1{font-size:34px;font-weight:800;margin:4px 0 24px;}
 
- .score-ring{
+.score-ring{
     width:260px;height:260px;margin:0 auto;position:relative;
     display:flex;align-items:center;justify-content:center;
   }
- .score-ring svg{transform:rotate(-90deg);position:absolute;}
- .score-content{
+.score-ring svg{transform:rotate(-90deg);position:absolute;}
+.score-content{
     text-align:center;background:rgba(255,255,255,0.08);
     backdrop-filter:blur(20px);width:220px;height:220px;
     border-radius:50%;display:flex;flex-direction:column;
     align-items:center;justify-content:center;
     border:1px solid rgba(255,255,255,0.15);
   }
- .score-content small{font-size:13px;opacity:0.8;text-transform:uppercase;letter-spacing:1px;}
- .score-content h2{font-size:64px;font-weight:800;margin:4px 0;}
- .score-btn{
+.score-content small{font-size:13px;opacity:0.8;text-transform:uppercase;letter-spacing:1px;}
+.score-content h2{font-size:64px;font-weight:800;margin:4px 0;}
+.score-btn{
     margin-top:12px;padding:10px 22px;background:var(--accent);
     color:white;border:none;border-radius:30px;font-weight:600;
     display:flex;align-items:center;gap:6px;cursor:pointer;transition:0.3s;
   }
- .score-btn:hover{transform:scale(1.05);background:var(--accent-dark);}
 
- .curve{height:40px;background:var(--bg);border-radius:40px 40px 0 0;margin-top:-40px;position:relative;z-index:3;}
+.curve{height:40px;background:var(--bg);border-radius:40px 40px 0 0;margin-top:-40px;position:relative;z-index:3;}
 
- .container{padding:0 20px;}
- .section-title{font-size:24px;font-weight:700;margin:20px 0 16px;color:var(--text-light);}
+.container{padding:0 20px;}
+.section-title{font-size:24px;font-weight:700;margin:20px 0 16px;}
 
- .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
- .card{
-    background:var(--card-dark);border-radius:20px;padding:20px;
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.card{
+    background:var(--card);border-radius:20px;padding:20px;
     display:flex;flex-direction:column;gap:8px;cursor:pointer;
-    transition:all 0.3s;border:1px solid rgba(255,255,255,0.05);
+    transition:all 0.3s;border:1px solid var(--border);
   }
- .card:hover{transform:translateY(-4px);background:#1a2740;}
- .card-icon{width:40px;height:40px;background:rgba(0,212,170,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;}
- .card h4{font-size:16px;font-weight:600;}
- .card p{font-size:13px;color:var(--muted);}
+.card:hover{transform:translateY(-4px);background:var(--card-hover);}
+.card-icon{width:40px;height:40px;background:rgba(0,212,170,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.card h4{font-size:16px;font-weight:600;}
+.card p{font-size:13px;color:var(--muted);}
 
   /* OFFERS PAGE */
- .offers-bg{background:#f1f5f9;min-height:100vh;}
- .offers-header{background:#e2e8f0;padding:20px 20px 16px;}
- .offers-header h1{font-size:28px;font-weight:800;color:var(--text);}
- .offers-list{padding:16px;display:flex;flex-direction:column;gap:12px;}
- .offer-card{
+.offers-bg{background:#f1f5f9;min-height:100vh;}
+ [data-theme="light"].offers-bg{background:#f1f5f9;}
+.offers-header{background:#e2e8f0;padding:20px 20px 16px;}
+.offers-header h1{font-size:28px;font-weight:800;color:var(--text-dark);}
+.offers-list{padding:16px;display:flex;flex-direction:column;gap:12px;}
+.offer-card{
     background:white;border-radius:16px;padding:18px;
     display:flex;gap:16px;align-items:flex-start;
-    box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;
-    transition:all 0.2s;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;transition:all 0.2s;
   }
- .offer-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.1);}
- .offer-icon{width:48px;height:48px;background:#f8fafc;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
- .offer-content h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;}
- .offer-content p{font-size:14px;color:var(--muted);line-height:1.4;}
+.offer-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.1);}
+.offer-icon{width:48px;height:48px;background:#f8fafc;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.offer-content h3{font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.offer-content p{font-size:14px;color:var(--muted);line-height:1.4;}
 
-  /* OTHER PAGES */
- .page-content{background:white;min-height:100vh;padding:20px;padding-bottom:100px;color:var(--text);}
- .page-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
- .back-btn{width:40px;height:40px;border-radius:12px;background:#f1f5f9;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;}
+  /* CONTENT PAGES */
+.page-content{background:var(--card-light);min-height:100vh;padding:20px;padding-bottom:100px;color:var(--text-dark);}
+ [data-theme="dark"].page-content{background:var(--card);color:var(--text);}
+.page-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.back-btn{width:40px;height:40px;border-radius:12px;background:#f1f5f9;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;}
+ [data-theme="dark"].back-btn{background:#1e293b;color:white;}
 
-  input,select,button{
-    width:100%;padding:14px;margin:10px 0;
-    border:1px solid #e2e8f0;border-radius:12px;font-size:15px;
-  }
-  button.primary{
-    background:linear-gradient(135deg,var(--accent),var(--accent-dark));
-    color:white;border:none;font-weight:600;cursor:pointer;
-    transition:all 0.3s;
-  }
-  button.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,212,170,0.3);}
+.stat{background:#f8fafc;padding:16px;border-radius:16px;margin-bottom:12px;}
+ [data-theme="dark"].stat{background:#1e293b;}
+.stat h4{font-size:13px;color:var(--muted);text-transform:uppercase;}
+.stat p{font-size:24px;font-weight:700;margin-top:4px;}
 
- .stat{background:#f8fafc;padding:16px;border-radius:16px;margin-bottom:12px;}
- .stat h4{font-size:13px;color:var(--muted);}
- .stat p{font-size:24px;font-weight:700;margin-top:4px;color:var(--text);}
+.file-upload{border:2px dashed var(--border-light);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.3s;}
+.file-upload:hover{border-color:var(--accent);background:rgba(0,212,170,0.1);}
+.file-upload input{display:none;}
+
+  table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;}
+  th,td{border-bottom:1px solid var(--border-light);padding:14px;text-align:left;}
+  th{background:rgba(0,212,170,0.1);color:var(--accent);font-weight:600;}
+
+.timeline{position:relative;padding-left:32px;}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--border-light);}
+.timeline-item{position:relative;padding-bottom:24px;}
+.timeline-item::before{content:'';position:absolute;left:-24px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--card-light);}
+ [data-theme="dark"].timeline-item::before{box-shadow:0 0 0 4px var(--card);}
+.timeline-item.completed::before{background:var(--accent-dark);}
+
+.progress-bar{height:8px;background:var(--border-light);border-radius:10px;overflow:hidden;margin-top:8px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-dark));transition:width 0.8s ease-out;}
+
+.badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;}
+.badge.pending{background:#fbbf24;color:#000;}
+.badge.review{background:#3b82f6;color:white;animation:pulse 2s infinite;}
+.badge.cleared{background:#22c55e;color:white;}
+
+.notification{position:fixed;top:20px;right:20px;background:var(--card);padding:16px 20px;border-radius:12px;border-left:4px solid var(--accent);box-shadow:0 8px 30px rgba(0,0,0,0.3);animation:slideIn 0.4s ease-out;z-index:1000;display:none;}
+.notification.show{display:block;}
 
   /* BOTTOM NAV */
- .bottom-nav{
+.bottom-nav{
     position:fixed;bottom:0;left:0;right:0;
-    background:white;display:flex;justify-content:space-around;
+    background:var(--card-light);display:flex;justify-content:space-around;
     padding:12px 0 calc(12px + env(safe-area-inset-bottom));
     border-radius:24px 24px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,0.1);
     z-index:100;
   }
- .nav-item{
+ [data-theme="dark"].bottom-nav{background:var(--card);}
+.nav-item{
     display:flex;flex-direction:column;align-items:center;gap:4px;
     font-size:12px;color:var(--muted);cursor:pointer;transition:0.3s;
   }
- .nav-item.active{color:var(--accent);}
- .nav-item svg{width:24px;height:24px;}
+.nav-item.active{color:var(--accent);}
+.nav-item svg{width:24px;height:24px;}
 
- .help-btn{
+.help-btn{
     position:fixed;bottom:90px;right:20px;
     width:56px;height:56px;border-radius:50%;
     background:var(--bg);color:white;border:none;
@@ -146,19 +201,58 @@
     cursor:pointer;z-index:99;
   }
 
+.top-bar{
+    position:absolute;top:20px;right:20px;z-index:10;
+    display:flex;gap:8px;
+  }
+.toggle-btn{
+    padding:8px 12px;background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.2);
+    color:white;font-weight:600;cursor:pointer;font-size:14px;
+  }
+
   @media(max-width:400px){
-   .grid{grid-template-columns:1fr;}
-   .score-ring{width:220px;height:220px;}
-   .score-content{width:180px;height:180px;}
-   .score-content h2{font-size:56px;}
+  .grid{grid-template-columns:1fr;}
+  .score-ring{width:220px;height:220px;}
+  .score-content{width:180px;height:180px;}
+  .score-content h2{font-size:56px;}
   }
 </style>
 </head>
-<body>
+<body data-theme="dark">
+
+<div class="notification" id="notification"></div>
+
+<!-- AUTH PAGE -->
+<div id="auth" class="page active">
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2>Welcome to Zinhle</h2>
+      <p>Login or create an account to manage your debt review</p>
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Password">
+      <select id="role">
+        <option value="client">Client</option>
+        <option value="admin">Admin</option>
+      </select>
+      <label style="display:flex;align-items:center;gap:8px;margin:12px 0;font-size:14px;">
+        <input type="checkbox" id="popia" style="width:auto;"> I consent to POPIA data processing
+      </label>
+      <button class="primary" onclick="login()">Continue</button>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center;">
+        Demo only. Real use requires NCR registration & POPIA compliance.
+      </p>
+    </div>
+  </div>
+</div>
 
 <!-- HOME PAGE -->
-<div id="home" class="page active">
+<div id="home" class="page">
   <div class="hero">
+    <div class="top-bar">
+      <button class="toggle-btn" onclick="toggleTheme()">🌙/☀️</button>
+      <button class="toggle-btn" onclick="logout()">Logout</button>
+    </div>
     <div class="hero-content">
       <h3 id="greeting">Good afternoon</h3>
       <h1 id="username">Zinhle Debt Counsellors</h1>
@@ -200,10 +294,10 @@
         <h4>My Debts</h4>
         <p>Manage accounts</p>
       </div>
-      <div class="card" onclick="showPage('timeline')">
-        <div class="card-icon">📈</div>
-        <h4>Progress</h4>
-        <p>Track your journey</p>
+      <div class="card" onclick="showPage('documents')">
+        <div class="card-icon">📄</div>
+        <h4>Documents</h4>
+        <p>Upload files</p>
       </div>
     </div>
   </div>
@@ -265,7 +359,10 @@
       <h2>Debt Report</h2>
     </div>
     <div id="reportContent"></div>
-    <button class="primary" onclick="exportPDF()">📄 Export PDF Report</button>
+    <div style="display:flex;gap:12px;margin-top:16px;">
+      <button class="primary" onclick="exportPDF()">📄 Export PDF</button>
+      <button class="primary" style="background:var(--accent-dark)" onclick="showNotification('Share link copied!', 'success')">🔗 Share</button>
+    </div>
   </div>
 </div>
 
@@ -287,6 +384,34 @@
   </div>
 </div>
 
+<!-- DOCUMENTS PAGE -->
+<div id="documents" class="page">
+  <div class="page-content">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('home')">←</button>
+      <h2>Documents</h2>
+    </div>
+    <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+      <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.png" onchange="handleFiles(this.files)">
+      <p>📁 Drag & drop or click to upload</p>
+      <p style="font-size:13px;color:var(--muted);margin-top:8px;">ID, Payslips, Bank Statements</p>
+    </div>
+    <div id="fileList" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<!-- PAYMENTS PAGE -->
+<div id="payments" class="page">
+  <div class="page-content">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('home')">←</button>
+      <h2>Payment Tracking</h2>
+    </div>
+    <div id="paymentHistory"></div>
+    <button class="primary" onclick="addPayment()">+ Add Payment Record</button>
+  </div>
+</div>
+
 <!-- CALCULATOR PAGE -->
 <div id="calculator" class="page">
   <div class="page-content">
@@ -298,6 +423,13 @@
     <input type="number" id="expenses" placeholder="Monthly Living Expenses">
     <button class="primary" onclick="calcAfford()">Calculate</button>
     <div id="affordResult"></div>
+
+    <h3 style="margin-top:24px;">Repayment Strategy</h3>
+    <select id="strategy" onchange="updateStrategy()">
+      <option value="snowball">Snowball - Pay smallest debt first</option>
+      <option value="avalanche">Avalanche - Pay highest interest first</option>
+    </select>
+    <div id="strategyResult"></div>
   </div>
 </div>
 
@@ -312,11 +444,39 @@
   </div>
 </div>
 
+<!-- ADMIN CLIENTS PAGE -->
+<div id="clients" class="page">
+  <div class="page-content">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('home')">←</button>
+      <h2>All Clients</h2>
+    </div>
+    <div id="clientTable"></div>
+  </div>
+</div>
+
+<!-- ADMIN ANALYTICS PAGE -->
+<div id="analytics" class="page">
+  <div class="page-content">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('home')">←</button>
+      <h2>Analytics</h2>
+    </div>
+    <div class="grid">
+      <div class="stat"><h4>Total Clients</h4><p id="totalClients">0</p></div>
+      <div class="stat"><h4>In Review</h4><p id="inReview">0</p></div>
+      <div class="stat"><h4>Cleared</h4><p id="cleared">0</p></div>
+      <div class="stat"><h4>Total Debt Managed</h4><p id="totalManaged">R0</p></div>
+    </div>
+    <canvas id="analyticsChart" style="margin-top:20px;max-height:300px;"></canvas>
+  </div>
+</div>
+
 <!-- HELP BUTTON -->
 <button class="help-btn" onclick="openWhatsApp()">?</button>
 
 <!-- BOTTOM NAV -->
-<div class="bottom-nav">
+<div class="bottom-nav" id="bottomNav" style="display:none;">
   <div class="nav-item active" onclick="showPage('home')">
     <svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
     <span>Home</span>
@@ -333,25 +493,93 @@
     <svg fill="currentColor" viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
     <span>Improve</span>
   </div>
-  <div class="nav-item" onclick="alert('Protect features coming soon')">
-    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.1 14.8,9.5V11H15.5C16.6,11 17.5,11.9 17.5,13V16.5C17.5,17.6 16.6,18.5 15.5,18.5H8.5C7.4,18.5 6.5,17.6 6.5,16.5V13C6.5,11.9 7.4,11 8.5,11H9.2V9.5C9.2,8.1 10.6,7 12,7Z"/></svg>
-    <span>Protect</span>
+  <div class="nav-item" onclick="showPage('clients')" id="adminNavBtn" style="display:none;">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    <span>Admin</span>
   </div>
 </div>
 
 <script>
-let debts = JSON.parse(localStorage.getItem('zinhle_debts') || '[]');
-let score = 638;
+let users = JSON.parse(localStorage.getItem('users') || '{}');
+let currentUser = null;
+let chart = null;
+let analyticsChart = null;
+
+function showNotification(msg,type='info'){
+  const notif = document.getElementById('notification');
+  notif.textContent = msg;
+  notif.style.borderLeftColor = type==='success'?'var(--accent-dark)':type==='error'?'var(--danger)':'var(--accent)';
+  notif.classList.add('show');
+  setTimeout(()=>notif.classList.remove('show'),3000);
+}
+
+function toggleTheme(){
+  const theme = document.body.dataset.theme === 'dark'? 'light' : 'dark';
+  document.body.dataset.theme = theme;
+}
+
+function login(){
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const role = document.getElementById('role').value;
+  const popia = document.getElementById('popia').checked;
+
+  if(!email ||!password){showNotification('Enter email and password','error');return;}
+  if(!popia){showNotification('Please accept POPIA consent','error');return;}
+
+  if(!users[email]){
+    users[email] = {
+      password, role,
+      debts:[],
+      status:'Pending',
+      income:0,
+      expenses:0,
+      documents:[],
+      payments:[],
+      timeline:['Application Started']
+    };
+  }
+
+  if(users[email].password!== password){showNotification('Wrong password','error');return;}
+
+  currentUser = email;
+  document.getElementById('auth').classList.remove('active');
+  document.getElementById('bottomNav').style.display='flex';
+
+  if(role === 'admin' || users[email].role === 'admin'){
+    document.getElementById('adminNavBtn').style.display='flex';
+    loadClients();
+    loadAnalytics();
+  } else {
+    document.getElementById('adminNavBtn').style.display='none';
+  }
+
+  showPage('home');
+  updateGreeting();
+  updateScore();
+  loadDebtList();
+  localStorage.setItem('users', JSON.stringify(users));
+  showNotification('Welcome back!','success');
+}
+
+function logout(){
+  currentUser = null;
+  document.getElementById('auth').classList.add('active');
+  document.getElementById('bottomNav').style.display='none';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+}
 
 function updateGreeting(){
   const hour = new Date().getHours();
   const greet = hour < 12? 'Good morning' : hour < 18? 'Good afternoon' : 'Good evening';
   document.getElementById('greeting').textContent = greet;
+  document.getElementById('username').textContent = currentUser? currentUser.split('@')[0] : 'Zinhle Debt Counsellors';
 }
 
 function updateScore(){
+  const debts = currentUser? users[currentUser].debts : [];
   const total = debts.reduce((a,b)=>a+b.amount,0);
-  score = Math.max(300, 850 - Math.floor(total/800));
+  const score = Math.max(300, 850 - Math.floor(total/800));
   document.getElementById('score').textContent = score;
 
   const offset = 754 - (score-300)/550*754;
@@ -368,11 +596,15 @@ function showPage(page){
 
   if(page==='report')loadReport();
   if(page==='debts')loadDebtList();
+  if(page==='documents')loadDocuments();
+  if(page==='payments')loadPayments();
   if(page==='timeline')loadTimeline();
+  if(page==='clients')loadClients();
+  if(page==='analytics')loadAnalytics();
 }
 
 function getNavIndex(page){
-  const map = {home:0, report:1, offers:2, timeline:3};
+  const map = {home:0, report:1, offers:2, timeline:3, clients:4};
   return map[page] || 0;
 }
 
@@ -382,9 +614,9 @@ function addDebt(){
   const installment = parseFloat(document.getElementById('installment').value)||0;
   const interest = parseFloat(document.getElementById('interest').value)||0;
 
-  if(!creditor ||!amount){alert('Please fill creditor and amount');return;}
-  debts.push({creditor, amount, installment, interest});
-  localStorage.setItem('zinhle_debts', JSON.stringify(debts));
+  if(!creditor ||!amount){showNotification('Please fill creditor and amount','error');return;}
+  users[currentUser].debts.push({creditor, amount, installment, interest});
+  localStorage.setItem('users', JSON.stringify(users));
 
   document.getElementById('creditor').value='';
   document.getElementById('amount').value='';
@@ -393,9 +625,11 @@ function addDebt(){
 
   updateScore();
   loadDebtList();
+  showNotification('Debt added successfully','success');
 }
 
 function loadDebtList(){
+  const debts = users[currentUser].debts;
   const list = document.getElementById('debtList');
   if(debts.length===0){list.innerHTML='<p style="color:#64748b;text-align:center;padding:20px;">No debts added yet</p>';return;}
 
@@ -414,13 +648,15 @@ function loadDebtList(){
 }
 
 function deleteDebt(i){
-  debts.splice(i,1);
-  localStorage.setItem('zinhle_debts', JSON.stringify(debts));
+  users[currentUser].debts.splice(i,1);
+  localStorage.setItem('users', JSON.stringify(users));
   updateScore();
   loadDebtList();
+  showNotification('Debt removed','success');
 }
 
 function loadReport(){
+  const debts = users[currentUser].debts;
   const total = debts.reduce((a,b)=>a+b.amount,0);
   const monthly = debts.reduce((a,b)=>a+b.installment,0);
   const newMonthly = monthly*0.6;
@@ -429,6 +665,7 @@ function loadReport(){
     <div class="stat">
       <h4>Total Debt</h4>
       <p>R${total.toLocaleString()}</p>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(100,(total/500000)*100)}%"></div></div>
     </div>
     <div class="stat">
       <h4>Current Monthly Payments</h4>
@@ -437,86 +674,4 @@ function loadReport(){
     <div class="stat" style="background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.2);">
       <h4>Estimated Under Debt Review</h4>
       <p style="color:var(--accent-dark);">R${newMonthly.toLocaleString()}</p>
-      <p style="font-size:14px;color:var(--accent-dark);">Potential savings: R${(monthly-newMonthly).toLocaleString()}/month</p>
-    </div>
-    <div style="background:#fef3c7;padding:16px;border-radius:12px;margin-top:16px;">
-      <p style="font-size:14px;color:#92400e;"><strong>Note:</strong> This is an estimate. Actual savings depend on creditor negotiations.</p>
-    </div>
-  `;
-}
-
-function loadTimeline(){
-  const steps = [
-    {name:'Free Assessment', desc:'Check if you qualify for debt review'},
-    {name:'Form 17.1 Sent', desc:'Creditors notified of your application'},
-    {name:'Proposal Submitted', desc:'Negotiating reduced payments'},
-    {name:'Court Order Granted', desc:'Legal protection active'},
-    {name:'In Payment', desc:'Paying one reduced monthly amount'},
-    {name:'Cleared', desc:'Debt-free certificate issued'}
-  ];
-
-  let html = '';
-  steps.forEach((step,i)=>{
-    const active = i<=2; // Demo: first 3 steps active
-    html += `
-      <div style="display:flex;gap:16px;margin-bottom:20px;opacity:${active?1:0.4};">
-        <div style="width:24px;height:24px;border-radius:50%;background:${active?'var(--accent)':'#e2e8f0'};display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;">${i+1}</div>
-        <div>
-          <h4 style="font-weight:600;margin-bottom:4px;">${step.name}</h4>
-          <p style="font-size:14px;color:#64748b;">${step.desc}</p>
-        </div>
-      </div>
-    `;
-  });
-  document.getElementById('timelineView').innerHTML = html;
-}
-
-function calcAfford(){
-  const income=parseFloat(document.getElementById('income').value)||0;
-  const expenses=parseFloat(document.getElementById('expenses').value)||0;
-  const disposable=income-expenses;
-
-  document.getElementById('affordResult').innerHTML = `
-    <div class="stat">
-      <h4>Disposable Income</h4>
-      <p>R${disposable.toLocaleString()}</p>
-      <p style="font-size:14px;color:#64748b;">Available for debt payments monthly</p>
-    </div>
-    ${disposable < 0? '<p style="color:#dc2626;font-size:14px;">You may qualify for debt review under the NCA.</p>' : ''}
-  `;
-}
-
-function exportPDF(){
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const total = debts.reduce((a,b)=>a+b.amount,0);
-
-  doc.setFontSize(18);
-  doc.text('Zinhle Debt Counsellors', 20, 20);
-  doc.setFontSize(12);
-  doc.text('Debt Health Report', 20, 30);
-  doc.text(`Total Debt: R${total.toLocaleString()}`, 20, 45);
-  doc.text(`Debt Health Score: ${score}`, 20, 55);
-  doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 65);
-
-  let y=85;
-  doc.text('Debt Breakdown:', 20, y);
-  y+=15;
-  debts.forEach(d=>{
-    doc.text(`${d.creditor}: R${d.amount.toLocaleString()}`, 20, y);
-    y+=10;
-  });
-
-  doc.save('zinhle-debt-report.pdf');
-}
-
-function openWhatsApp(){
-  window.open('https://wa.me/27739308383?text=Hi%20Zinhle%20Debt%20Counsellors,%20I%20need%20help%20with%20debt%20review', '_blank');
-}
-
-// Init
-updateGreeting();
-updateScore();
-</script>
-</body>
-</html>
+      <p style="font-size:14px;color:var(--accent-dark);">Potential savings: R${(monthly
