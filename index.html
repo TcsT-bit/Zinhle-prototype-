@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zinhle Debt Counsellors - Client Portal</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+  body{background:#f5f7fa;color:#333;}
+ .container{max-width:1000px;margin:0 auto;padding:20px;}
+  header{background:#1e3a8a;color:white;padding:20px;border-radius:8px;margin-bottom:20px;}
+  header h1{font-size:24px;}
+ .card{background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:20px;}
+  input,select,button{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:5px;}
+  button{background:#1e3a8a;color:white;border:none;cursor:pointer;font-weight:bold;}
+  button:hover{background:#152c6b;}
+ .hidden{display:none;}
+  table{width:100%;border-collapse:collapse;margin-top:10px;}
+  th,td{border:1px solid #ddd;padding:10px;text-align:left;}
+  th{background:#1e3a8a;color:white;}
+ .badge{padding:5px 10px;border-radius:12px;font-size:12px;}
+ .badge.pending{background:#fbbf24;color:#000;}
+ .badge.review{background:#3b82f6;color:white;}
+ .badge.cleared{background:#10b981;color:white;}
+ .nav{display:flex;gap:10px;margin-bottom:20px;}
+ .nav button{flex:1;}
+ .danger{background:#dc2626;}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Zinhle Debt Counsellors - Client Portal</h1>
+    <p>Debt Review & Financial Guidance</p>
+  </header>
+
+  <!-- LOGIN / REGISTER -->
+  <div id="auth" class="card">
+    <h2>Login / Register</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <select id="role">
+      <option value="client">Client</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button onclick="login()">Login / Register</button>
+  </div>
+
+  <!-- CLIENT DASHBOARD -->
+  <div id="client" class="hidden">
+    <div class="nav">
+      <button onclick="showTab('addDebt')">Add Debt</button>
+      <button onclick="showTab('myDebts')">My Debts</button>
+      <button onclick="showTab('guide')">Debt Review Guide</button>
+      <button class="danger" onclick="logout()">Logout</button>
+    </div>
+
+    <div id="addDebt" class="card">
+      <h3>Add Your Debt</h3>
+      <input type="text" id="creditor" placeholder="Creditor Name e.g. Capitec">
+      <input type="number" id="amount" placeholder="Outstanding Amount">
+      <input type="number" id="installment" placeholder="Current Monthly Installment">
+      <button onclick="addDebt()">Save Debt</button>
+    </div>
+
+    <div id="myDebts" class="card hidden">
+      <h3>My Debts</h3>
+      <p><strong>Total Debt:</strong> R<span id="totalDebt">0</span></p>
+      <p><strong>Estimated New Installment:</strong> R<span id="newInstallment">0</span>/month</p>
+      <table id="debtTable">
+        <tr><th>Creditor</th><th>Amount</th><th>Installment</th></tr>
+      </table>
+    </div>
+
+    <div id="guide" class="card hidden">
+      <h3>Debt Review Process</h3>
+      <ol>
+        <li><strong>Assessment:</strong> We check if you are over-indebted under the NCA.</li>
+        <li><strong>Application:</strong> We send Form 17.1 to all credit providers.</li>
+        <li><strong>Proposal:</strong> We negotiate lower payments with creditors.</li>
+        <li><strong>Court Order:</strong> If accepted, you get a court order protecting you.</li>
+        <li><strong>Payment:</strong> You pay one reduced amount monthly to a PDA.</li>
+        <li><strong>Clearance:</strong> Once paid, you get a clearance certificate.</li>
+      </ol>
+      <p><strong>Note:</strong> You cannot take new credit while under debt review.</p>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="admin" class="hidden">
+    <div class="nav">
+      <button onclick="showTab('clients')">All Clients</button>
+      <button class="danger" onclick="logout()">Logout</button>
+    </div>
+
+    <div id="clients" class="card">
+      <h3>Client Cases</h3>
+      <table id="clientTable">
+        <tr><th>Email</th><th>Total Debt</th><th>Status</th><th>Action</th></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+let users = JSON.parse(localStorage.getItem('users') || '{}');
+let currentUser = null;
+
+function login(){
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const role = document.getElementById('role').value;
+
+  if(!email ||!password){alert('Enter email and password');return;}
+
+  if(!users[email]){
+    users[email] = {password, role, debts:[], status:'Pending'};
+  }
+  if(users[email].password!== password){alert('Wrong password');return;}
+
+  currentUser = email;
+  document.getElementById('auth').classList.add('hidden');
+
+  if(role === 'admin' || users[email].role === 'admin'){
+    document.getElementById('admin').classList.remove('hidden');
+    loadClients();
+  } else {
+    document.getElementById('client').classList.remove('hidden');
+    loadDebts();
+  }
+  localStorage.setItem('users', JSON.stringify(users));
+}
+
+function logout(){
+  currentUser = null;
+  document.getElementById('auth').classList.remove('hidden');
+  document.getElementById('client').classList.add('hidden');
+  document.getElementById('admin').classList.add('hidden');
+}
+
+function showTab(tab){
+  ['addDebt','myDebts','guide','clients'].forEach(t=>{
+    document.getElementById(t).classList.add('hidden');
+  });
+  document.getElementById(tab).classList.remove('hidden');
+}
+
+function addDebt(){
+  const creditor = document.getElementById('creditor').value;
+  const amount = parseFloat(document.getElementById('amount').value);
+  const installment = parseFloat(document.getElementById('installment').value);
+
+  if(!creditor ||!amount){alert('Fill all fields');return;}
+
+  users[currentUser].debts.push({creditor, amount, installment});
+  localStorage.setItem('users', JSON.stringify(users));
+  loadDebts();
+  alert('Debt added');
+}
+
+function loadDebts(){
+  const debts = users[currentUser].debts;
+  let total = 0;
+  let currentInstall = 0;
+  const table = document.getElementById('debtTable');
+  table.innerHTML = '<tr><th>Creditor</th><th>Amount</th><th>Installment</th></tr>';
+
+  debts.forEach(d=>{
+    total += d.amount;
+    currentInstall += d.installment || 0;
+    table.innerHTML += `<tr><td>${d.creditor}</td><td>R${d.amount}</td><td>R${d.installment}</td></tr>`;
+  });
+
+  document.getElementById('totalDebt').innerText = total.toFixed(2);
+  // Simple estimate: reduce installment by 40% under review
+  document.getElementById('newInstallment').innerText = (currentInstall*0.6).toFixed(2);
+}
+
+function loadClients(){
+  const table = document.getElementById('clientTable');
+  table.innerHTML = '<tr><th>Email</th><th>Total Debt</th><th>Status</th><th>Action</th></tr>';
+
+  Object.keys(users).forEach(email=>{
+    if(users[email].role!== 'admin'){
+      const total = users[email].debts.reduce((a,b)=>a+b.amount,0);
+      const status = users[email].status;
+      const badge = status==='Pending'? 'pending' : status==='In Review'? 'review' : 'cleared';
+      table.innerHTML += `
+        <tr>
+          <td>${email}</td>
+          <td>R${total}</td>
+          <td><span class="badge ${badge}">${status}</span></td>
+          <td>
+            <select onchange="updateStatus('${email}',this.value)">
+              <option>Pending</option>
+              <option>In Review</option>
+              <option>Cleared</option>
+            </select>
+          </td>
+        </tr>`;
+    }
+  });
+}
+
+function updateStatus(email,status){
+  users[email].status = status;
+  localStorage.setItem('users', JSON.stringify(users));
+  loadClients();
+}
+</script>
+</body>
+      </html>
