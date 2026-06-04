@@ -36,16 +36,19 @@
 input,select,button{width:100%;padding:14px;margin:10px 0;border:1px solid var(--border-light);border-radius:12px;background:var(--bg);color:var(--text);font-size:15px;}
 input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,170,0.2);}
 button.primary{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:white;border:none;font-weight:600;cursor:pointer;}
+button.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,212,170,0.3);}
 
 .hero{position:relative;height:58vh;background:linear-gradient(135deg,#1e293b,#0f172a) center/cover no-repeat;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;}
 .hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(10,15,28,0.95) 75%);}
 .hero-content{position:relative;z-index:2;}
+.hero-content h3{font-size:18px;font-weight:400;opacity:0.9;}
 .hero-content h1{font-size:34px;font-weight:800;margin:4px 0 24px;}
 
 .score-ring{width:260px;height:260px;margin:0 auto;position:relative;display:flex;align-items:center;justify-content:center;}
 .score-ring svg{transform:rotate(-90deg);position:absolute;}
 .score-content{text-align:center;background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);width:220px;height:220px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.15);}
-.score-content h2{font-size:64px;font-weight:800;}
+.score-content small{font-size:13px;opacity:0.8;text-transform:uppercase;letter-spacing:1px;}
+.score-content h2{font-size:64px;font-weight:800;margin:4px 0;}
 .score-btn{margin-top:12px;padding:10px 22px;background:var(--accent);color:white;border:none;border-radius:30px;font-weight:600;cursor:pointer;}
 
 .curve{height:40px;background:var(--bg);border-radius:40px 40px 0 0;margin-top:-40px;}
@@ -59,6 +62,15 @@ button.primary{background:linear-gradient(135deg,var(--accent),var(--accent-dark
 .card h4{font-size:16px;font-weight:600;}
 .card p{font-size:13px;color:var(--muted);}
 
+.offers-bg{background:#f1f5f9;min-height:100vh;}
+.offers-header{background:#e2e8f0;padding:20px 20px 16px;}
+.offers-header h1{font-size:28px;font-weight:800;color:var(--text-dark);}
+.offers-list{padding:16px;display:flex;flex-direction:column;gap:12px;}
+.offer-card{background:white;border-radius:16px;padding:18px;display:flex;gap:16px;align-items:flex-start;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;}
+.offer-icon{width:48px;height:48px;background:#f8fafc;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.offer-content h3{font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.offer-content p{font-size:14px;color:var(--muted);line-height:1.4;}
+
 .page-content{background:var(--card-light);min-height:100vh;padding:20px;padding-bottom:100px;color:var(--text-dark);}
 [data-theme="dark"].page-content{background:var(--card);color:var(--text);}
 .page-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
@@ -69,10 +81,6 @@ button.primary{background:linear-gradient(135deg,var(--accent),var(--accent-dark
 .stat h4{font-size:13px;color:var(--muted);text-transform:uppercase;}
 .stat p{font-size:24px;font-weight:700;margin-top:4px;}
 
-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;}
-th,td{border-bottom:1px solid var(--border-light);padding:14px;text-align:left;}
-th{background:rgba(0,212,170,0.1);color:var(--accent);font-weight:600;}
-
 .notification{position:fixed;top:20px;right:20px;background:var(--card);padding:16px 20px;border-radius:12px;border-left:4px solid var(--accent);box-shadow:0 8px 30px rgba(0,0,0,0.3);z-index:1000;display:none;}
 .notification.show{display:block;}
 
@@ -80,11 +88,19 @@ th{background:rgba(0,212,170,0.1);color:var(--accent);font-weight:600;}
 [data-theme="dark"].bottom-nav{background:var(--card);}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted);cursor:pointer;}
 .nav-item.active{color:var(--accent);}
+.nav-item svg{width:24px;height:24px;}
 
 .help-btn{position:fixed;bottom:90px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--bg);color:white;border:none;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;z-index:99;}
 
 .top-bar{position:absolute;top:20px;right:20px;z-index:10;display:flex;gap:8px;}
 .toggle-btn{padding:8px 12px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,0.2);color:white;font-weight:600;cursor:pointer;}
+
+@media(max-width:400px){
+.grid{grid-template-columns:1fr;}
+.score-ring{width:220px;height:220px;}
+.score-content{width:180px;height:180px;}
+.score-content h2{font-size:56px;}
+}
 </style>
 </head>
 <body data-theme="dark">
@@ -140,8 +156,22 @@ th{background:rgba(0,212,170,0.1);color:var(--accent);font-weight:600;}
     <h2 class="section-title">Explore</h2>
     <div class="grid">
       <div class="card" onclick="showPage('report')"><div class="card-icon">📊</div><h4>Debt Report</h4><p>See your full breakdown</p></div>
+      <div class="card" onclick="showPage('calculator')"><div class="card-icon">🧮</div><h4>Calculator</h4><p>Check affordability</p></div>
       <div class="card" onclick="showPage('debts')"><div class="card-icon">💳</div><h4>My Debts</h4><p>Manage accounts</p></div>
+      <div class="card" onclick="showPage('timeline')"><div class="card-icon">📈</div><h4>Progress</h4><p>Track your journey</p></div>
     </div>
+  </div>
+</div>
+
+<!-- OFFERS PAGE -->
+<div id="offers" class="page offers-bg">
+  <div class="offers-header"><h1>Offers</h1></div>
+  <div class="offers-list">
+    <div class="offer-card" onclick="alert('Loan matching coming soon')"><div class="offer-icon">🤝</div><div class="offer-content"><h3>Loans</h3><p>Browse short and long-term loans matched to your profile</p></div></div>
+    <div class="offer-card" onclick="alert('Card offers coming soon')"><div class="offer-icon">💳</div><div class="offer-content"><h3>Credit/Store Cards</h3><p>Cards selected for you based on your credit health</p></div></div>
+    <div class="offer-card" onclick="showPage('debts')"><div class="offer-icon">🔄</div><div class="offer-content"><h3>Debt Solutions</h3><p>Streamline your debts and save money with debt review</p></div></div>
+    <div class="offer-card" onclick="alert('Insurance comparison coming soon')"><div class="offer-icon">🛡️</div><div class="offer-content"><h3>Insurance</h3><p>Browse and compare car, life and funeral insurance premiums</p></div></div>
+    <div class="offer-card" onclick="alert('Phone deals coming soon')"><div class="offer-icon">📱</div><div class="offer-content"><h3>Phones and Data</h3><p>Find deals on mobile phones and data bundles</p></div></div>
   </div>
 </div>
 
@@ -168,14 +198,46 @@ th{background:rgba(0,212,170,0.1);color:var(--accent);font-weight:600;}
   </div>
 </div>
 
+<!-- CALCULATOR PAGE -->
+<div id="calculator" class="page">
+  <div class="page-content">
+    <div class="page-header"><button class="back-btn" onclick="showPage('home')">←</button><h2>Affordability Calculator</h2></div>
+    <input type="number" id="income" placeholder="Monthly Net Income">
+    <input type="number" id="expenses" placeholder="Monthly Living Expenses">
+    <button class="primary" onclick="calcAfford()">Calculate</button>
+    <div id="affordResult"></div>
+  </div>
+</div>
+
+<!-- TIMELINE PAGE -->
+<div id="timeline" class="page">
+  <div class="page-content">
+    <div class="page-header"><button class="back-btn" onclick="showPage('home')">←</button><h2>Debt Review Journey</h2></div>
+    <div id="timelineView"></div>
+  </div>
+</div>
+
 <!-- HELP BUTTON -->
 <button class="help-btn" onclick="openWhatsApp()">?</button>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottomNav" style="display:none;">
-  <div class="nav-item active" onclick="showPage('home')">Home</div>
-  <div class="nav-item" onclick="showPage('report')">Report</div>
-  <div class="nav-item" onclick="showPage('debts')">Debts</div>
+  <div class="nav-item active" onclick="showPage('home')">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span>Home</span>
+  </div>
+  <div class="nav-item" onclick="showPage('report')">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+    <span>Report</span>
+  </div>
+  <div class="nav-item" onclick="showPage('offers')">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+    <span>Offers</span>
+  </div>
+  <div class="nav-item" onclick="showPage('timeline')">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+    <span>Improve</span>
+  </div>
 </div>
 
 <script>
@@ -234,52 +296,45 @@ function logout(){
   document.getElementById('auth').classList.add('active');
   document.getElementById('bottomNav').style.display='none';
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('auth').classList.add('active');
 }
 
 function updateGreeting(){
-  if(!currentUser) return;
   const hour = new Date().getHours();
   const greet = hour < 12? 'Good morning' : hour < 18? 'Good afternoon' : 'Good evening';
-  const greetingEl = document.getElementById('greeting');
-  const usernameEl = document.getElementById('username');
-  if(greetingEl) greetingEl.textContent = greet;
-  if(usernameEl) usernameEl.textContent = currentUser.split('@')[0];
+  document.getElementById('greeting').textContent = greet;
+  document.getElementById('username').textContent = currentUser? currentUser.split('@')[0] : 'Zinhle Debt Counsellors';
 }
 
 function updateScore(){
-  if(!currentUser) return;
-  const debts = users[currentUser]?.debts || [];
+  const debts = currentUser? users[currentUser].debts : [];
   const total = debts.reduce((a,b)=>a+b.amount,0);
   const score = Math.max(300, 850 - Math.floor(total/800));
-  const scoreEl = document.getElementById('score');
-  const circleEl = document.getElementById('scoreCircle');
-  if(scoreEl) scoreEl.textContent = score;
-  if(circleEl){
-    const offset = 754 - (score-300)/550*754;
-    circleEl.style.strokeDashoffset = offset;
-  }
+  document.getElementById('score').textContent = score;
+
+  const offset = 754 - (score-300)/550*754;
+  document.getElementById('scoreCircle').style.strokeDashoffset = offset;
 }
 
 function showPage(page, skipNavUpdate = false){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const targetPage = document.getElementById(page);
-  if(targetPage) targetPage.classList.add('active');
+  document.getElementById(page).classList.add('active');
 
   if(!skipNavUpdate){
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     const idx = getNavIndex(page);
-    const navItems = document.querySelectorAll('.nav-item');
-    if(navItems[idx]) navItems[idx].classList.add('active');
+    if(document.querySelectorAll('.nav-item')[idx]){
+      document.querySelectorAll('.nav-item')[idx].classList.add('active');
+    }
   }
 
   if(page==='report')loadReport();
   if(page==='debts')loadDebtList();
+  if(page==='timeline')loadTimeline();
 }
 
 function getNavIndex(page){
-  const map = {home:0, report:1, debts:2};
-  return map[page]?? 0;
+  const map = {home:0, report:1, offers:2, timeline:3};
+  return map[page] || 0;
 }
 
 function addDebt(){
@@ -305,7 +360,6 @@ function addDebt(){
 function loadDebtList(){
   const debts = users[currentUser]?.debts || [];
   const list = document.getElementById('debtList');
-  if(!list) return;
   if(debts.length===0){
     list.innerHTML='<p style="color:#64748b;text-align:center;padding:20px;">No debts added yet</p>';
     return;
@@ -313,9 +367,14 @@ function loadDebtList(){
 
   list.innerHTML = debts.map((d,i)=>`
     <div class="stat">
-      <h4>${d.creditor}</h4>
-      <p>R${d.amount.toLocaleString()} - R${d.installment}/month at ${d.interest}%</p>
-      <button onclick="deleteDebt(${i})" style="margin-top:8px;padding:6px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;">Delete</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h4>${d.creditor}</h4>
+          <p>R${d.amount.toLocaleString()}</p>
+          <p style="font-size:14px;color:#64748b;">R${d.installment}/month • ${d.interest}% interest</p>
+        </div>
+        <button onclick="deleteDebt(${i})" style="width:auto;padding:8px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;">Delete</button>
+      </div>
     </div>
   `).join('');
 }
@@ -334,10 +393,7 @@ function loadReport(){
   const monthly = debts.reduce((a,b)=>a+b.installment,0);
   const newMonthly = monthly*0.6;
 
-  const reportContent = document.getElementById('reportContent');
-  if(!reportContent) return;
-
-  reportContent.innerHTML = `
+  document.getElementById('reportContent').innerHTML = `
     <div class="stat">
       <h4>Total Debt</h4>
       <p>R${total.toLocaleString()}</p>
@@ -351,6 +407,47 @@ function loadReport(){
       <p style="color:var(--accent-dark);">R${newMonthly.toLocaleString()}</p>
       <p style="font-size:14px;color:var(--accent-dark);">Potential savings: R${(monthly-newMonthly).toLocaleString()}/month</p>
     </div>
+  `;
+}
+
+function loadTimeline(){
+  const steps = [
+    {name:'Free Assessment', desc:'Check if you qualify for debt review'},
+    {name:'Form 17.1 Sent', desc:'Creditors notified of your application'},
+    {name:'Proposal Submitted', desc:'Negotiating reduced payments'},
+    {name:'Court Order Granted', desc:'Legal protection active'},
+    {name:'In Payment', desc:'Paying one reduced monthly amount'},
+    {name:'Cleared', desc:'Debt-free certificate issued'}
+  ];
+
+  let html = '';
+  steps.forEach((step,i)=>{
+    const active = i<=2;
+    html += `
+      <div style="display:flex;gap:16px;margin-bottom:20px;opacity:${active?1:0.4};">
+        <div style="width:24px;height:24px;border-radius:50%;background:${active?'var(--accent)':'#e2e8f0'};display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;">${i+1}</div>
+        <div>
+          <h4 style="font-weight:600;margin-bottom:4px;">${step.name}</h4>
+          <p style="font-size:14px;color:#64748b;">${step.desc}</p>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('timelineView').innerHTML = html;
+}
+
+function calcAfford(){
+  const income=parseFloat(document.getElementById('income').value)||0;
+  const expenses=parseFloat(document.getElementById('expenses').value)||0;
+  const disposable=income-expenses;
+
+  document.getElementById('affordResult').innerHTML = `
+    <div class="stat">
+      <h4>Disposable Income</h4>
+      <p>R${disposable.toLocaleString()}</p>
+      <p style="font-size:14px;color:#64748b;">Available for debt payments monthly</p>
+    </div>
+    ${disposable < 0? '<p style="color:#dc2626;font-size:14px;">You may qualify for debt review under the NCA.</p>' : ''}
   `;
 }
 
@@ -373,7 +470,8 @@ function openWhatsApp(){
   window.open('https://wa.me/27739308383?text=Hi%20Zinhle%20Debt%20Counsellors', '_blank');
 }
 
-// Don't call updateGreeting/updateScore on load - wait for login
+updateGreeting();
+updateScore();
 </script>
 </body>
 </html>
