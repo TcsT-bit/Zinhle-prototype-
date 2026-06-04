@@ -6,115 +6,76 @@
 <title>Zinhle Debt Counsellors - Client Portal</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0b1120;
-    --card:#131c31;
-    --card-hover:#1a2740;
-    --text:#f1f5f9;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --text:#e2e8f0;
     --muted:#94a3b8;
     --accent:#3b82f6;
-    --accent-glow:rgba(59,130,246,0.3);
     --accent2:#22c55e;
     --danger:#ef4444;
-    --warning:#f59e0b;
-    --border:#1e293b;
+    --border:#334155;
   }
   [data-theme="light"]{
     --bg:#f8fafc;
     --card:#ffffff;
-    --card-hover:#f1f5f9;
     --text:#0f172a;
     --muted:#64748b;
     --accent:#2563eb;
-    --accent-glow:rgba(37,99,235,0.2);
     --accent2:#16a34a;
     --danger:#dc2626;
-    --warning:#d97706;
     --border:#e2e8f0;
   }
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;}
-  body{background:var(--bg);color:var(--text);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+  body{background:var(--bg);color:var(--text);transition:0.3s;}
+ .container{max-width:1100px;margin:0 auto;padding:16px;}
 
-  @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+  header{background:linear-gradient(135deg,var(--accent),#1d4ed8);padding:20px;border-radius:16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
+  header h1{font-size:22px;font-weight:700;}
+  header p{font-size:13px;opacity:0.9;}
 
- .container{max-width:1200px;margin:0 auto;padding:20px;animation:fadeInUp 0.6s ease-out;}
+ .toggle{cursor:pointer;background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:8px;border:none;color:white;font-weight:600;}
 
-  header{background:linear-gradient(135deg,#3b82f6,#1d4ed8);padding:24px;border-radius:20px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 40px var(--accent-glow);animation:fadeInUp 0.8s ease-out;}
-  header h1{font-size:24px;font-weight:700;letter-spacing:-0.5px;}
-  header p{font-size:14px;opacity:0.9;margin-top:4px;}
-
- .toggle{cursor:pointer;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);padding:10px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);color:white;font-weight:600;transition:all 0.3s;}
- .toggle:hover{background:rgba(255,255,255,0.25);transform:scale(1.05);}
-
- .nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px;}
- .nav button{padding:14px;border:none;border-radius:14px;background:var(--card);color:var(--text);font-weight:600;cursor:pointer;border:1px solid var(--border);transition:all 0.3s;animation:slideIn 0.5s ease-out;}
- .nav button:hover{background:var(--card-hover);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.2);}
- .nav button.active{background:var(--accent);color:white;border-color:var(--accent);box-shadow:0 8px 20px var(--accent-glow);}
+ .nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;}
+ .nav button{padding:12px;border:none;border-radius:12px;background:var(--card);color:var(--text);font-weight:600;cursor:pointer;border:1px solid var(--border);transition:0.2s;}
+ .nav button.active,.nav button:hover{background:var(--accent);color:white;border-color:var(--accent);}
  .nav button.danger:hover{background:var(--danger);}
 
- .card{background:var(--card);padding:24px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.2);margin-bottom:24px;border:1px solid var(--border);animation:fadeInUp 0.6s ease-out;transition:all 0.3s;}
- .card:hover{box-shadow:0 8px 30px rgba(0,0,0,0.3);}
- .card h3{margin-bottom:16px;font-size:20px;font-weight:600;}
+ .card{background:var(--card);padding:20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.15);margin-bottom:20px;border:1px solid var(--border);}
+ .card h3{margin-bottom:12px;font-size:18px;}
 
-  input,select,button{width:100%;padding:14px;margin:10px 0;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);font-size:15px;transition:all 0.3s;}
-  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
-  button.primary{background:linear-gradient(135deg,var(--accent),#1d4ed8);color:white;border:none;font-weight:600;cursor:pointer;}
-  button.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px var(--accent-glow);}
+  input,select,button{width:100%;padding:12px;margin:8px 0;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:15px;}
+  button.primary{background:var(--accent);color:white;border:none;font-weight:600;cursor:pointer;}
+  button.primary:hover{opacity:0.9;}
   button.success{background:var(--accent2);color:white;border:none;}
   button.danger{background:var(--danger);color:white;border:none;}
 
- .file-upload{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.3s;}
- .file-upload:hover{border-color:var(--accent);background:var(--accent-glow);}
- .file-upload input{display:none;}
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px;}
+  th,td{border-bottom:1px solid var(--border);padding:12px;text-align:left;}
+  th{background:rgba(59,130,246,0.1);color:var(--accent);}
 
-  table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;}
-  th,td{border-bottom:1px solid var(--border);padding:14px;text-align:left;}
-  th{background:rgba(59,130,246,0.1);color:var(--accent);font-weight:600;}
-  tr{transition:all 0.2s;}
-  tr:hover{background:var(--card-hover);}
+ .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;}
+ .stat{background:var(--bg);padding:16px;border-radius:12px;border:1px solid var(--border);}
+ .stat h4{font-size:13px;color:var(--muted);font-weight:500;}
+ .stat p{font-size:24px;font-weight:700;margin-top:4px;}
 
- .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
- .stat{background:var(--bg);padding:20px;border-radius:16px;border:1px solid var(--border);transition:all 0.3s;}
- .stat:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.2);}
- .stat h4{font-size:13px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.5px;}
- .stat p{font-size:28px;font-weight:700;margin-top:8px;}
-
- .badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;}
+ .badge{padding:6px 10px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;}
  .badge.pending{background:#fbbf24;color:#000;}
- .badge.review{background:#3b82f6;color:white;animation:pulse 2s infinite;}
+ .badge.review{background:#3b82f6;color:white;}
  .badge.cleared{background:#22c55e;color:white;}
- .badge.warning{background:#f59e0b;color:white;}
-
- .timeline{position:relative;padding-left:32px;}
- .timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--border);}
- .timeline-item{position:relative;padding-bottom:24px;animation:slideIn 0.5s ease-out;}
- .timeline-item::before{content:'';position:absolute;left:-24px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--bg);}
- .timeline-item.completed::before{background:var(--accent2);}
-
- .notification{position:fixed;top:20px;right:20px;background:var(--card);padding:16px 20px;border-radius:12px;border-left:4px solid var(--accent);box-shadow:0 8px 30px rgba(0,0,0,0.3);animation:slideIn 0.4s ease-out;z-index:1000;display:none;}
- .notification.show{display:block;}
 
  .hidden{display:none;}
- .flex{display:flex;gap:12px;align-items:center;}
-  canvas{max-height:320px;}
- .progress-bar{height:8px;background:var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
- .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.8s ease-out;}
+ .flex{display:flex;gap:10px;align-items:center;}
+  canvas{max-height:300px;}
 
   @media(max-width:768px){
-   .nav{grid-template-columns:repeat(2,1fr);}
-    header{flex-direction:column;align-items:flex-start;gap:12px;}
-   .stat p{font-size:24px;}
+  .nav{grid-template-columns:repeat(2,1fr);}
+    header{flex-direction:column;align-items:flex-start;gap:10px;}
   }
 </style>
 </head>
 <body data-theme="dark">
-<div class="notification" id="notification"></div>
-
 <div class="container">
   <header>
     <div>
@@ -127,18 +88,15 @@
   <!-- AUTH -->
   <div id="auth" class="card">
     <h3>Welcome Back</h3>
-    <p style="color:var(--muted);margin-bottom:16px;">Login or create an account to manage your debt review</p>
+    <p style="color:var(--muted);margin-bottom:12px;">Login or create an account to manage your debt review</p>
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="password" placeholder="Password">
     <select id="role">
       <option value="client">Client</option>
       <option value="admin">Admin</option>
     </select>
-    <label style="display:flex;align-items:center;gap:8px;margin:12px 0;font-size:14px;">
-      <input type="checkbox" id="popia" style="width:auto;"> I consent to POPIA data processing
-    </label>
     <button class="primary" onclick="login()">Continue</button>
-    <p style="font-size:12px;color:var(--muted);margin-top:12px;">Demo only. Real use requires NCR registration & POPIA compliance.</p>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">Demo only. Real use requires NCR registration & POPIA compliance.</p>
   </div>
 
   <!-- CLIENT -->
@@ -146,10 +104,8 @@
     <div class="nav">
       <button onclick="showTab('dashboard')" class="active">Dashboard</button>
       <button onclick="showTab('addDebt')">Add Debt</button>
-      <button onclick="showTab('documents')">Documents</button>
-      <button onclick="showTab('payments')">Payments</button>
-      <button onclick="showTab('timeline')">Timeline</button>
       <button onclick="showTab('calculator')">Calculator</button>
+      <button onclick="showTab('guide')">Guide</button>
     </div>
 
     <div id="dashboard" class="card">
@@ -158,7 +114,6 @@
         <div class="stat">
           <h4>Total Debt</h4>
           <p id="totalDebt">R0</p>
-          <div class="progress-bar"><div class="progress-fill" id="debtProgress" style="width:0%"></div></div>
         </div>
         <div class="stat">
           <h4>Current Monthly Payments</h4>
@@ -174,10 +129,7 @@
         </div>
       </div>
       <canvas id="debtChart"></canvas>
-      <div style="display:flex;gap:12px;margin-top:16px;">
-        <button class="primary" onclick="exportPDF()">📄 Export PDF</button>
-        <button class="success" onclick="showNotification('Share link copied!', 'success')">🔗 Share Report</button>
-      </div>
+      <button class="primary" onclick="exportPDF()">📄 Export Summary PDF</button>
     </div>
 
     <div id="addDebt" class="card hidden">
@@ -188,32 +140,10 @@
       <input type="number" id="interest" placeholder="Interest Rate %">
       <button class="primary" onclick="addDebt()">Save Debt</button>
 
-      <h3 style="margin-top:24px;">Your Debts</h3>
+      <h3 style="margin-top:20px;">Your Debts</h3>
       <table id="debtTable">
         <tr><th>Creditor</th><th>Amount</th><th>Installment</th><th>Interest</th><th></th></tr>
       </table>
-    </div>
-
-    <div id="documents" class="card hidden">
-      <h3>Document Upload</h3>
-      <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-        <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.png" onchange="handleFiles(this.files)">
-        <p>📁 Drag & drop or click to upload</p>
-        <p style="font-size:13px;color:var(--muted);margin-top:8px;">ID, Payslips, Bank Statements</p>
-      </div>
-      <div id="fileList" style="margin-top:16px;"></div>
-    </div>
-
-    <div id="payments" class="card hidden">
-      <h3>Payment Tracking</h3>
-      <p style="color:var(--muted);margin-bottom:16px;">Track your monthly payments to PDA</p>
-      <div id="paymentHistory"></div>
-      <button class="primary" onclick="addPayment()">+ Add Payment Record</button>
-    </div>
-
-    <div id="timeline" class="card hidden">
-      <h3>Your Debt Review Journey</h3>
-      <div class="timeline" id="timelineView"></div>
     </div>
 
     <div id="calculator" class="card hidden">
@@ -221,14 +151,29 @@
       <input type="number" id="income" placeholder="Monthly Net Income">
       <input type="number" id="expenses" placeholder="Monthly Living Expenses">
       <button class="primary" onclick="calcAfford()">Calculate</button>
-      <div id="affordResult" style="margin-top:16px;"></div>
+      <div id="affordResult" style="margin-top:12px;"></div>
 
-      <h3 style="margin-top:24px;">Repayment Strategy</h3>
+      <h3 style="margin-top:20px;">Repayment Strategy</h3>
       <select id="strategy" onchange="updateStrategy()">
         <option value="snowball">Snowball - Pay smallest debt first</option>
         <option value="avalanche">Avalanche - Pay highest interest first</option>
       </select>
       <div id="strategyResult"></div>
+    </div>
+
+    <div id="guide" class="card hidden">
+      <h3>Debt Review Process - NCA</h3>
+      <ol style="padding-left:20px;line-height:1.8;">
+        <li><strong>Free Assessment:</strong> We check if you qualify as over-indebted.</li>
+        <li><strong>Form 17.1:</strong> We notify all credit providers you are under review.</li>
+        <li><strong>Proposal:</strong> We negotiate reduced payments and interest.</li>
+        <li><strong>Court Order:</strong> Legal protection from legal action and repossession.</li>
+        <li><strong>Single Payment:</strong> You pay one reduced amount to a Payment Distribution Agency.</li>
+        <li><strong>Clearance:</strong> Once paid, you receive a clearance certificate.</li>
+      </ol>
+      <div style="background:rgba(239,68,68,0.1);padding:12px;border-radius:8px;margin-top:12px;">
+        <strong>Important:</strong> You cannot take new credit while under debt review.
+      </div>
     </div>
   </div>
 
@@ -237,36 +182,24 @@
     <div class="nav">
       <button onclick="showTab('clients')" class="active">Clients</button>
       <button onclick="showTab('leads')">Leads</button>
-      <button onclick="showTab('analytics')">Analytics</button>
       <button onclick="logout()" class="danger">Logout</button>
     </div>
 
     <div id="clients" class="card">
       <h3>All Client Cases</h3>
       <table id="clientTable">
-        <tr><th>Client</th><th>Total Debt</th><th>Status</th><th>Progress</th><th>Action</th></tr>
+        <tr><th>Email</th><th>Total Debt</th><th>Status</th><th>Action</th></tr>
       </table>
     </div>
 
     <div id="leads" class="card hidden">
       <h3>New Lead Capture</h3>
-      <p style="color:var(--muted);margin-bottom:16px;">Capture leads and send them directly to WhatsApp</p>
+      <p style="color:var(--muted);margin-bottom:12px;">Capture leads and send them directly to WhatsApp</p>
       <input type="text" id="leadName" placeholder="Full Name">
       <input type="tel" id="leadPhone" placeholder="Phone Number">
       <input type="number" id="leadIncome" placeholder="Monthly Income">
       <input type="number" id="leadDebt" placeholder="Total Debt">
       <button class="primary" onclick="sendLead()">📱 Send to WhatsApp</button>
-    </div>
-
-    <div id="analytics" class="card hidden">
-      <h3>Business Analytics</h3>
-      <div class="grid">
-        <div class="stat"><h4>Total Clients</h4><p id="totalClients">0</p></div>
-        <div class="stat"><h4>In Review</h4><p id="inReview">0</p></div>
-        <div class="stat"><h4>Cleared</h4><p id="cleared">0</p></div>
-        <div class="stat"><h4>Total Debt Managed</h4><p id="totalManaged">R0</p></div>
-      </div>
-      <canvas id="analyticsChart"></canvas>
     </div>
   </div>
 </div>
@@ -275,15 +208,6 @@
 let users = JSON.parse(localStorage.getItem('users') || '{}');
 let currentUser = null;
 let chart = null;
-let analyticsChart = null;
-
-function showNotification(msg,type='info'){
-  const notif = document.getElementById('notification');
-  notif.textContent = msg;
-  notif.style.borderLeftColor = type==='success'?'var(--accent2)':type==='error'?'var(--danger)':'var(--accent)';
-  notif.classList.add('show');
-  setTimeout(()=>notif.classList.remove('show'),3000);
-}
 
 function toggleTheme(){
   const theme = document.body.dataset.theme === 'dark'? 'light' : 'dark';
@@ -294,28 +218,21 @@ function login(){
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   const role = document.getElementById('role').value;
-  const popia = document.getElementById('popia').checked;
 
-  if(!email ||!password){showNotification('Enter email and password','error');return;}
-  if(!popia){showNotification('Please accept POPIA consent','error');return;}
-
-  if(!users[email]){users[email] = {password, role, debts:[], status:'Pending', income:0, expenses:0, documents:[], payments:[], timeline:['Application Started']};}
-  if(users[email].password!== password){showNotification('Wrong password','error');return;}
+  if(!email ||!password){alert('Enter email and password');return;}
+  if(!users[email]){users[email] = {password, role, debts:[], status:'Pending', income:0, expenses:0};}
+  if(users[email].password!== password){alert('Wrong password');return;}
 
   currentUser = email;
   document.getElementById('auth').classList.add('hidden');
   if(role === 'admin' || users[email].role === 'admin'){
     document.getElementById('admin').classList.remove('hidden');
     loadClients();
-    loadAnalytics();
   } else {
     document.getElementById('client').classList.remove('hidden');
     loadDebts();
-    loadTimeline();
-    loadPayments();
   }
   localStorage.setItem('users', JSON.stringify(users));
-  showNotification('Welcome back!','success');
 }
 
 function logout(){
@@ -328,7 +245,7 @@ function logout(){
 function showTab(tab){
   document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
   event.target.classList.add('active');
-  ['dashboard','addDebt','documents','payments','timeline','calculator','clients','leads','analytics'].forEach(t=>{
+  ['dashboard','addDebt','calculator','guide','clients','leads'].forEach(t=>{
     document.getElementById(t)?.classList.add('hidden');
   });
   document.getElementById(tab).classList.remove('hidden');
@@ -340,7 +257,7 @@ function addDebt(){
   const installment = parseFloat(document.getElementById('installment').value)||0;
   const interest = parseFloat(document.getElementById('interest').value)||0;
 
-  if(!creditor ||!amount){showNotification('Enter creditor and amount','error');return;}
+  if(!creditor ||!amount){alert('Enter creditor and amount');return;}
   users[currentUser].debts.push({creditor, amount, installment, interest});
   localStorage.setItem('users', JSON.stringify(users));
   loadDebts();
@@ -348,7 +265,6 @@ function addDebt(){
   document.getElementById('amount').value='';
   document.getElementById('installment').value='';
   document.getElementById('interest').value='';
-  showNotification('Debt added successfully','success');
 }
 
 function loadDebts(){
@@ -374,7 +290,6 @@ function loadDebts(){
   document.getElementById('currentPay').innerText='R'+currentPay.toLocaleString();
   document.getElementById('newPay').innerText='R'+newPay.toLocaleString();
   document.getElementById('savings').innerText='R'+(currentPay-newPay).toLocaleString();
-  document.getElementById('debtProgress').style.width=Math.min(100,(total/500000)*100)+'%';
 
   drawChart(debts);
 }
@@ -383,7 +298,6 @@ function deleteDebt(i){
   users[currentUser].debts.splice(i,1);
   localStorage.setItem('users', JSON.stringify(users));
   loadDebts();
-  showNotification('Debt removed','success');
 }
 
 function drawChart(debts){
@@ -393,52 +307,10 @@ function drawChart(debts){
     type:'doughnut',
     data:{
       labels:debts.map(d=>d.creditor),
-      datasets:[{data:debts.map(d=>d.amount),backgroundColor:['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6','#ec4899']}]
+      datasets:[{data:debts.map(d=>d.amount),backgroundColor:['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6']}]
     },
-    options:{plugins:{legend:{labels:{color:getComputedStyle(document.body).getPropertyValue('--text')}}},animation:{animateRotate:true,duration:1000}}
+    options:{plugins:{legend:{labels:{color:getComputedStyle(document.body).getPropertyValue('--text')}}}}
   });
-}
-
-function handleFiles(files){
-  const fileList = document.getElementById('fileList');
-  Array.from(files).forEach(file=>{
-    users[currentUser].documents.push({name:file.name,size:file.size,date:new Date().toLocaleDateString()});
-    fileList.innerHTML += `<div class="stat" style="margin-bottom:8px;"><h4>${file.name}</h4><p style="font-size:14px;">${(file.size/1024).toFixed(1)} KB</p></div>`;
-  });
-  localStorage.setItem('users', JSON.stringify(users));
-  showNotification('Files uploaded','success');
-}
-
-function addPayment(){
-  const amount = prompt('Enter payment amount:');
-  if(!amount)return;
-  users[currentUser].payments.push({amount:parseFloat(amount),date:new Date().toLocaleDateString()});
-  localStorage.setItem('users', JSON.stringify(users));
-  loadPayments();
-  showNotification('Payment recorded','success');
-}
-
-function loadPayments(){
-  const payments = users[currentUser].payments || [];
-  let html = '<table><tr><th>Date</th><th>Amount</th></tr>';
-  payments.forEach(p=>{html+=`<tr><td>${p.date}</td><td>R${p.amount.toLocaleString()}</td></tr>`;});
-  html+='</table>';
-  document.getElementById('paymentHistory').innerHTML=html;
-}
-
-function loadTimeline(){
-  const timeline = users[currentUser].timeline || ['Application Started'];
-  let html = '';
-  const steps = ['Application Started','Form 17.1 Sent','Proposal Submitted','Court Order Granted','In Payment','Cleared'];
-
-  steps.forEach((step,i)=>{
-    const completed = timeline.includes(step);
-    html += `<div class="timeline-item ${completed?'completed':''}">
-      <h4>${step}</h4>
-      <p style="color:var(--muted);font-size:14px;">${completed?'Completed':''}</p>
-    </div>`;
-  });
-  document.getElementById('timelineView').innerHTML=html;
 }
 
 function calcAfford(){
@@ -453,7 +325,7 @@ function calcAfford(){
     <div class="stat">
       <h4>Disposable Income</h4>
       <p>R${disposable.toLocaleString()}</p>
-      <p style="font-size:13px;color:var(--muted);">Available for debt payments</p>
+      <p style="font-size:13px;color:var(--muted);">This is what can go toward debt payments</p>
     </div>`;
 }
 
@@ -471,22 +343,18 @@ function updateStrategy(){
 
 function loadClients(){
   const table = document.getElementById('clientTable');
-  table.innerHTML = '<tr><th>Client</th><th>Total Debt</th><th>Status</th><th>Progress</th><th>Action</th></tr>';
+  table.innerHTML = '<tr><th>Email</th><th>Total Debt</th><th>Status</th><th>Action</th></tr>';
   Object.keys(users).forEach(email=>{
     if(users[email].role!=='admin'){
       const total=users[email].debts.reduce((a,b)=>a+b.amount,0);
       const status=users[email].status;
-      const progress = status==='Cleared'?100:status==='In Review'?60:30;
       const badge=status==='Pending'?'pending':status==='In Review'?'review':'cleared';
       table.innerHTML+=`<tr>
         <td>${email}</td>
         <td>R${total.toLocaleString()}</td>
         <td><span class="badge ${badge}">${status}</span></td>
-        <td><div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div></td>
         <td><select onchange="updateStatus('${email}',this.value)">
-          <option ${status==='Pending'?'selected':''}>Pending</option>
-          <option ${status==='In Review'?'selected':''}>In Review</option>
-          <option ${status==='Cleared'?'selected':''}>Cleared</option>
+          <option>Pending</option><option>In Review</option><option>Cleared</option>
         </select></td>
       </tr>`;
     }
@@ -495,54 +363,31 @@ function loadClients(){
 
 function updateStatus(email,status){
   users[email].status=status;
-  if(!users[email].timeline.includes(status))users[email].timeline.push(status);
   localStorage.setItem('users',JSON.stringify(users));
   loadClients();
-  showNotification(`Status updated to ${status}`,'success');
 }
 
-function loadAnalytics(){
-  const clients = Object.keys(users).filter(e=>users[e].role!=='admin');
-  const inReview = clients.filter(e=>users[e].status==='In Review').length;
-  const cleared = clients.filter(e=>users[e].status==='Cleared').length;
-  const totalManaged = clients.reduce((sum,e)=>sum+users[e].debts.reduce((a,b)=>a+b.amount,0),0);
-
-  document.getElementById('totalClients').textContent=clients.length;
-  document.getElementById('inReview').textContent=inReview;
-  document.getElementById('cleared').textContent=cleared;
-  document.getElementById('totalManaged').textContent='R'+totalManaged.toLocaleString();
-
-  const ctx = document.getElementById('analyticsChart');
-  if(analyticsChart)analyticsChart.destroy();
-  analyticsChart = new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:['Pending','In Review','Cleared'],
-      datasets:[{label:'Clients',data:[clients.length-inReview-cleared,inReview,cleared],backgroundColor:['#f59e0b','#3b82f6','#22c55e']}]
-    },
-    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
-  });
-}
-
+// 1. WhatsApp Lead Capture
 function sendLead(){
   const name = document.getElementById('leadName').value;
   const phone = document.getElementById('leadPhone').value;
   const income = document.getElementById('leadIncome').value;
   const debt = document.getElementById('leadDebt').value;
 
-  if(!name ||!phone){showNotification('Enter name and phone number','error');return;}
+  if(!name ||!phone){alert('Enter name and phone number');return;}
 
   const message = `Hi, I'm ${name}. My income is R${income} and debt is R${debt}. Can you help me with debt review?`;
   const url = `https://wa.me/27739308383?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
 
+  // Clear form
   document.getElementById('leadName').value='';
   document.getElementById('leadPhone').value='';
   document.getElementById('leadIncome').value='';
   document.getElementById('leadDebt').value='';
-  showNotification('WhatsApp opened','success');
 }
 
+// 2. PDF Export with jsPDF
 async function exportPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -561,10 +406,10 @@ async function exportPDF(){
   doc.text(`Monthly Savings: R${(currentPay-newPay).toLocaleString()}`, 20, 80);
   doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 90);
 
-  let y = 110;
   doc.setFontSize(14);
-  doc.text('Debt Breakdown:', 20, y);
-  y+=15;
+  doc.text('Debt Breakdown:', 20, 110);
+
+  let y = 125;
   doc.setFontSize(11);
   debts.forEach(d=>{
     doc.text(`${d.creditor} - R${d.amount.toLocaleString()} - ${d.interest}% interest`, 20, y);
@@ -573,7 +418,6 @@ async function exportPDF(){
   });
 
   doc.save('debt-summary.pdf');
-  showNotification('PDF downloaded','success');
 }
 </script>
 </body>
